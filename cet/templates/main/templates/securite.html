@@ -1,0 +1,115 @@
+{% extends 'main/templates/index.html' %}
+{% load static %}
+{% block header %}
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+  <h1>
+    Sécurité
+    <small> </small>
+  </h1>
+
+</section>
+
+{% endblock %}
+
+{% block meta %}
+
+
+<style>
+    label {
+    text-align: right;
+    clear: both;
+    float:left;
+    margin-right:15px;
+}
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+</style>
+
+
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+          <div class="col-sm-2">
+          </div>
+          <div class="col-md-7">
+            <div class="box box-solid">
+              <div class="box-header with-border">
+              
+                <h3 class="box-title">Changement de mot de passe :</h3>
+              </div><!-- /.box-header -->
+              <div class="box-body"> 
+                <form id="id_password_change_form" method="POST" class="form-signin">{% csrf_token %}
+                
+                <div class="form-group">
+                    <label for="id_old_password">Ancien mot de passe *</label>
+                    <input type="password" class="form-control" id="id_old_password" name="old_password" placeholder="Ancien mot de passe ">
+                </div>
+                <div class="form-group">
+                    <label for="id_new_password1">Nouveau mot de passe *</label>
+                    <input type="password" class="form-control" id="id_new_password1" name="new_password1" placeholder="Nouveau mot de passe">
+                </div>
+                <div class="form-group">
+                    <label for="id_new_password2">Confirmer le mot de passe *</label>
+                    <input type="password" class="form-control" id="id_new_password2" name="new_password2" placeholder="Confirmer le mot de passe">
+                </div>
+
+                {% for field in form %}
+                    {% for error in field.errors %}
+                        <p  style="color: red">{{ error }}</p>
+                    {% endfor %}
+                {% endfor %}
+                <p id="msgerror" style="color: red"></p>
+                <buttonc id="btnmodifier" class="btn btn-block btn-success btn-xs" style="width:100px" onclick="matchPassword()"> Modifier</button> 
+            </form>
+              </div><!-- /.box-body -->
+            </div><!-- /.box -->
+          </div><!-- ./col -->
+                      
+          <div class="col-sm-4">
+          </div>
+        </div>
+    </div>
+   
+    <script>  
+      function matchPassword() {  
+        var pw1 = document.getElementById("id_old_password");  
+        var pw2 = document.getElementById("id_new_password1");  
+        var pw3 = document.getElementById("msgerror"); 
+        var pw4 = document.getElementById("id_password_change_form"); 
+        if(pw1.value == pw2.value)  
+        {   
+          pw3.innerHTML = "Veuillez choisir un mot de passe différent de votre ancien mot de passe." ;
+        } 
+        else 
+        {
+          pw4.submit();
+        }
+      }  
+      </script>  
+    
+        
+{% endblock %}
+
+{% block highlight_mdp %} class="active" {% endblock %}
+{% block secu_treeview %}
+  active
+  {% endblock %}
+  {% block secu_menu_open %}
+  menu-open
+  {% endblock %}
+  {% block secu_menu_style %}
+  style="display: block;"
+  {% endblock %}

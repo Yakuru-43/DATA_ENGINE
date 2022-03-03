@@ -1,0 +1,82 @@
+{% load static %}
+<link rel="icon" href="{% static 'favicon.ico' %}">
+<!DOCTYPE html>
+<html>
+
+<head>
+<style>
+    .error {
+    color: red;
+}
+</style>
+
+</head>
+
+<body>
+    <form id="myform">
+        <div>
+            <input type="checkbox" name="demo[]" value="colorado" />test0
+            <input type="checkbox" name="demo[]" value="michigan" />test1
+            <input type="checkbox" name="demo[]" value="colorado" />test2
+            <input type="checkbox" name="demo[]" value="michigan" />test3
+            <input type="checkbox" name="demo[]" value="colorado" />test4
+            <input type="checkbox" name="demo[]" value="michigan" />test5
+        </div>
+        <div>
+            <input type="checkbox" name="service.area" value="colorado" />colorado
+            <input type="checkbox" name="service.area" value="michigan" />michigan
+        </div>
+        <div>
+            <input type="checkbox" name="fav[]" value="skiing" />skiing
+            <input type="checkbox" name="fav[]" value="volley" />volley
+        </div>
+        <div>
+            <input type="checkbox" name="zone" value="afrique" />afrique
+            <input type="checkbox" name="zone" value="europe" />europe
+            <input type="checkbox" name="zone" value="asie_amerique" />asie_amerique
+        </div>
+        <div>
+            <input type="submit" />
+        </div>
+    </form>
+    <a href="http://docs.jquery.com/Plugins/Validation" target="_blank">Validation Documentation</a>
+
+    <!-- jQuery 2.1.3 -->
+    <script src=" {% static 'cet/plugins/jQuery/jQuery-2.1.3.min.js' %} "></script>
+    <!-- jQuery validate -->
+    <script src=" {% static 'cet/validate/jquery.validate.min.js' %} "></script>
+    <script>
+        $(document).ready(function () {
+
+            $('#myform').validate({
+                rules: {
+                    'service.area': {
+                        required: true
+                    },
+                    'fav[]': {
+                        required: true
+                    },
+                    'demo[]': {
+                        required: true
+                    },
+                    'zone' :{
+                        required: true
+                    }
+                },
+                errorPlacement: function (error, element) {
+                    //error.insertBefore(element);
+                    error.insertAfter(element.closest('div'));
+                },
+                submitHandler: function (form) { // for demo
+                    alert('valid form');
+                    return false;
+                }
+            });
+
+        });
+
+    </script>
+</body>
+<footer>
+
+</footer>

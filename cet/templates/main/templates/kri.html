@@ -1,0 +1,542 @@
+{% extends 'main/templates/index.html' %}
+{% load static %}
+{% load humanize %}
+{% block header %}
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+  <h1>
+    Indicateurs de RISQUE (KRI)
+    <small> </small>
+  </h1>
+
+</section>
+<style>
+  td{
+    font-size: 14px;
+    padding-bottom: 10px;
+  }
+  table{
+    margin: 0 auto ;
+  }
+</style>
+{% endblock %}
+{% block meta %}
+<!--===============================================================================================-->
+<link rel="stylesheet" type="text/css" href=" {% static 'cet/table_template/vendor/animate/animate.css' %} " >
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href=" {% static 'cet/table_template/vendor/select2/select2.min.css' %} " >
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href=" {% static 'cet/table_template/vendor/perfect-scrollbar/perfect-scrollbar.css' %} " >
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href=" {% static 'cet/table_template/css/util.css' %} "  >
+	<link rel="stylesheet" type="text/css" href=" {% static 'cet/table_template/css/main.css' %} " >
+<!--===============================================================================================-->
+{% endblock %}
+
+{% block style %}
+<style>
+  .narrow{
+    padding-top: 0px;padding-bottom: 0px;
+  }
+  .intro {
+  background-color: yellow;
+  padding-top: 5px;  padding-bottom: 5px;
+} 
+</style>
+{% endblock %} 
+{% block content %}
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="box">
+      <div class="box-header with-border">
+        <!--<h3 class="box-title">ACCEPTATION</h3>-->
+
+      </div><!-- /.box-header -->
+      <div class="box-body">
+        <div class="row">
+          <div class="col-md-4">
+            <!-- Primary box -->
+            <div class=" box box-solid box-info ">
+              <div class="box-header">
+                <h3 class="box-title">PART DES PRIMES INT. PAR COURTIER </h3>
+                
+              </div>
+              <div class="box-body" style="display: block; height: 300px; background-color: #f3ededf3;">
+                 <div >
+                  <div class="chart-container" style="height: 200px; width: 200px ; margin: 0 auto;" >  
+                      <canvas id="part_prime_courtier" width="200" height="200" style=" pointer-events: none;   "  > </canvas>
+                      <label style="text-align: center;  display: block;" for="myChart"> PART DES PRIMES INT. PAR COURTIER ACCEPTATION  </label> 
+                  </div>
+                </div>
+              </div><!-- /.box-body -->
+            </div><!-- /.box -->
+          </div><!-- /.col -->
+
+          <div class="col-md-4">
+            <!-- Primary box -->
+            <div class="box box-solid box-info ">
+              <div class="box-header">
+                <h3 class="box-title">PART DES PRIMES RETROCESSION </h3>
+                
+              </div>
+              <div class="box-body" style="display: block;height: 300px; background-color: #f3ededf3;">
+                
+                <div >
+                  <div class="chart-container" style="height: 200px; width: 200px ; margin: 0 auto;" >  
+                      <canvas id="part_prime_courtier_retro" width="200" height="200" style=" pointer-events: none "  > </canvas>
+                      <label style="text-align: center;  display: block;" for="myChart"> PART DES PRIMES RETROCESSION </label> 
+                  </div>
+              </div>
+
+              </div><!-- /.box-body -->
+            </div><!-- /.box -->
+          </div><!-- /.col -->
+         
+          <div class="col-md-4">
+            <!-- Primary box -->
+            <div class="box box-solid box-info ">
+              <div class="box-header">
+                <h3 class="box-title">LOSS RATIO </h3>
+                
+              </div>
+              <div class="box-body" style="display: block; height: 300px; background-color: #f3ededf3;">
+                <div>
+                  <table>
+                    <tr>
+                      <td>BRANCHE&nbsp;</td>  
+                      <td><SELECT class="loss_ratio" name="branche"  required id="listebranches_loss_ratio">
+                        <option value="" disabled >Branche</option>
+                        {% for item in liste_branches %}
+                          <option value="{{item.0}}"> {{item.1}} </option>
+                        {% endfor %}
+                        <!--<option value="?"  > TOUTES BRANCHES </option>-->
+                      </SELECT></td>
+                    </tr>
+                    <tr>
+                      <td>ZONE</td> 
+                      <td>
+                        <select class="loss_ratio"  name="zone"  required id="listezones_loss_ratio">
+                          <option value="" disabled >Zone</option>
+                          <option value="1" selected> ALGERIE </option>
+                          <option value="2"> AFRIQUE ET MONDE ARABE </option>
+                          <option value="3"> AMERIQUE ET ASIE </option>
+                          <option value="4"> EUROPE</option>
+                          <!--<option value="*" > AFFAIRES INTERNATIONALES</option>
+                          <option value="?"  > TOUTES ZONES</option>-->
+                        </select>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>SOUSCRIPTION</td> 
+                      <td>
+                        <select class="loss_ratio" name="souscription"  id="listesous_loss_ratio"  >
+                          <option value="A" selected > ACCEPTATION  </option>
+                          <option value="R"> RETROCESSION </option>
+                          <!--<option value="N"  > NET </option>-->
+                        </select>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+                <div >
+                    <div class="chart-container" style="height: 150px; width: 150px; margin: 0 auto;" >  
+                        <canvas id="loss_ratio" width="150" height="150" style=" pointer-events: none; "  > </canvas>
+                        <label style="text-align: center;  display: block;" for="myChart"> LOSS RATIO </label> 
+                    </div>
+                </div>
+                
+              </div><!-- /.box-body -->
+            </div><!-- /.box -->
+          </div><!-- /.col -->
+
+        </div>
+        <div class="row">
+
+        </div>
+        <div class="row">
+          <div class="col-md-2" style="margin-bottom: 20px;">
+          </div>
+          <div class="col-md-8" style="margin-bottom: 20px;">
+                <div class="container-table110" >
+                  <div class="wrap-table110">
+                      <div class="table100 ver1 m-b-110 " style="padding-top: 0px;;margin-bottom: 0px;">
+                          <div>
+                              <table class="table100-body" >
+                                  <thead>
+                                      <tr class="row100 head" >
+                                          <th  style="padding-left:30px ;  height: 50px;" > #</th>
+                                          <th  >SECURITE</th>
+                                          <th style="text-align: right;padding-right:30px;" >ENGAGEMENT</th>
+      
+                                      </tr>
+                                  </thead>
+                                  <tbody>
+                                      <tr class="row100 body">
+                                        <td id="l1c0" style="padding-left:30px;padding-top: 5px;  padding-bottom: 5px;"></td>
+                                        <td id="l1c1" style="padding-top: 5px;  padding-bottom: 5px;" ></td>
+                                        <td id="l1c2" style="text-align: right;padding-right:30px;padding-top: 5px;  padding-bottom: 5px;" ></td>
+                                      </tr>
+                                      <tr class="row100 body">
+                                        <td id="l2c0"  style="padding-left:30px ; padding-top: 5px;  padding-bottom: 5px;" ></td>
+                                        <td id="l2c1" style="padding-top: 5px;  padding-bottom: 5px;"></td>
+                                        <td id="l2c2" style="text-align: right;padding-right:30px ;padding-top: 5px;  padding-bottom: 5px;" ></td>
+                                      </tr>
+                                      <tr class="row100 body">
+                                        <td id="l3c0"   style="padding-left:30px ;padding-top: 5px;  padding-bottom: 5px; "></td>
+                                        <td id="l3c1" style="padding-top: 5px;  padding-bottom: 5px;"></td>
+                                        <td id="l3c2" style="text-align: right;padding-right:30px ;padding-top: 5px;  padding-bottom: 5px;" ></td>
+                                      </tr>
+                                      <tr class="row100 body">
+                                        <td id="l4c0"  style="padding-left:30px ; padding-top: 5px;  padding-bottom: 5px;" ></td>
+                                        <td id="l4c1" style="padding-top: 5px;  padding-bottom: 5px;"></td>
+                                        <td id="l4c2" style="text-align: right;padding-right:30px ;padding-top: 5px;  padding-bottom: 5px;" ></td>
+                                      </tr>
+                                      <tr class="row100 body">
+                                        <td id="l5c0"  style="padding-left:30px ; padding-top: 5px;  padding-bottom: 5px;" ></td>
+                                        <td id="l5c1" style="padding-top: 5px;  padding-bottom: 5px;"></td>
+                                        <td id="l5c2" style="text-align: right;padding-right:30px ;padding-top: 5px;  padding-bottom: 5px;" ></td>
+                                      </tr>
+                                      <tr class="row100 body">
+                                        <td id="l6c0"  style="padding-left:30px ;padding-top: 5px;  padding-bottom: 5px; " ></td>
+                                        <td id="l6c1" style="padding-top: 5px;  padding-bottom: 5px;"></td>
+                                        <td id="l6c2" style="text-align: right;padding-right:30px ;padding-top: 5px;  padding-bottom: 5px;" ></td>
+                                      </tr>
+                                      <tr class="row100 body">
+                                        <td id="l7c0"   style="padding-left:30px ;padding-top: 5px;  padding-bottom: 5px; "></td>
+                                        <td id="l7c1" style="padding-top: 5px;  padding-bottom: 5px;"></td>
+                                        <td id="l7c2" style="text-align: right;padding-right:30px ;padding-top: 5px;  padding-bottom: 5px;" ></td>
+                                      </tr>
+                                      <tr class="row100 body">
+                                        <td id="l8c0"   style="padding-left:30px ; padding-top: 5px;  padding-bottom: 5px;"></td>
+                                        <td id="l8c1" style="padding-top: 5px;  padding-bottom: 5px;"></td>
+                                        <td id="l8c2" style="text-align: right;padding-right:30px ;padding-top: 5px;  padding-bottom: 5px;" ></td>
+                                      </tr>
+                                      <tr class="row100 body">
+                                        <td id="l9c0"  style="padding-left:30px ; padding-top: 5px;  padding-bottom: 5px;" ></td>
+                                        <td id="l9c1" style="padding-top: 5px;  padding-bottom: 5px;"></td>
+                                        <td id="l9c2" style="text-align: right;padding-right:30px ;padding-top: 5px;  padding-bottom: 5px;" ></td>
+                                      </tr>
+                                      <tr class="row100 body">
+                                        <td id="l10c0"   style="padding-left:30px ; padding-top: 5px;  padding-bottom: 5px;"></td>
+                                        <td id="l10c1" style="padding-top: 5px;  padding-bottom: 5px;"></td>
+                                        <td id="l10c2" style="text-align: right;padding-right:30px ;padding-top: 5px;  padding-bottom: 15px;" ></td>
+                                      </tr>
+                                                                      
+                                  </tbody>
+                                  
+                              </table>
+                          </div>
+                      </div>
+                  </div>
+                </div>
+          </div><!-- /.col -->
+          <div class="col-md-2" style="margin-bottom: 20px;">
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-2" style="margin-bottom: 20px;">
+          </div>
+          <div class="col-md-8">
+            <div class="container-table110" >
+              <div class="wrap-table110">
+                  <div class="table100 ver1 m-b-110 " style="padding-top: 0px;;margin-bottom: 0px;">
+                      <div>
+                          <table class="table100-body">
+                              <thead>
+                                  <tr class="row100 head" >
+                                      <th  style="padding-left:30px ;  height: 50px;" > #</th>
+                                      <th  >CEDANTE</th>
+                                      <th  style="text-align: right;padding-right:30px;" >RISQUE DEFAUT</th>
+  
+                                  </tr>
+                              </thead>
+                              <tbody>
+                                  <tr class="row100 body">
+                                    <td id="l1c0_2"   style="padding-left:30px ;padding-top: 5px;  padding-bottom: 5px; "></td>
+                                    <td id="l1c1_2" style="padding-top: 5px;  padding-bottom: 5px;"></td>
+                                    <td id="l1c2_2" style="text-align: right;padding-right:30px ;padding-top: 5px;  padding-bottom: 5px;" ></td>
+                                  </tr>
+                                  <tr class="row100 body">
+                                    <td id="l2c0_2"  style="padding-left:30px ; padding-top: 5px;  padding-bottom: 5px;" ></td>
+                                    <td id="l2c1_2" style="padding-top: 5px;  padding-bottom: 5px;"></td>
+                                    <td id="l2c2_2" style="text-align: right;padding-right:30px ;padding-top: 5px;  padding-bottom: 5px;" ></td>
+                                  </tr>
+                                  <tr class="row100 body">
+                                    <td id="l3c0_2"   style="padding-left:30px ;padding-top: 5px;  padding-bottom: 5px; "></td>
+                                    <td id="l3c1_2" style="padding-top: 5px;  padding-bottom: 5px;"></td>
+                                    <td id="l3c2_2" style="text-align: right;padding-right:30px ;padding-top: 5px;  padding-bottom: 5px;" ></td>
+                                  </tr>
+                                  <tr class="row100 body">
+                                    <td id="l4c0_2"  style="padding-left:30px ; padding-top: 5px;  padding-bottom: 5px;" ></td>
+                                    <td id="l4c1_2" style="padding-top: 5px;  padding-bottom: 5px;"></td>
+                                    <td id="l4c2_2" style="text-align: right;padding-right:30px ;padding-top: 5px;  padding-bottom: 5px;" ></td>
+                                  </tr>
+                                  <tr class="row100 body">
+                                    <td id="l5c0_2"  style="padding-left:30px ; padding-top: 5px;  padding-bottom: 5px;" ></td>
+                                    <td id="l5c1_2" style="padding-top: 5px;  padding-bottom: 5px;"></td>
+                                    <td id="l5c2_2" style="text-align: right;padding-right:30px ;padding-top: 5px;  padding-bottom: 5px;" ></td>
+                                  </tr>
+                                  <tr class="row100 body">
+                                    <td id="l6c0_2"  style="padding-left:30px ; padding-top: 5px;  padding-bottom: 5px;" ></td>
+                                    <td id="l6c1_2" style="padding-top: 5px;  padding-bottom: 5px;"></td>
+                                    <td id="l6c2_2" style="text-align: right;padding-right:30px ;padding-top: 5px;  padding-bottom: 5px;" ></td>
+                                  </tr>
+                                  <tr class="row100 body">
+                                    <td id="l7c0_2"   style="padding-left:30px ; padding-top: 5px;  padding-bottom: 5px;"></td>
+                                    <td id="l7c1_2" style="padding-top: 5px;  padding-bottom: 5px;"></td>
+                                    <td id="l7c2_2" style="text-align: right;padding-right:30px ;padding-top: 5px;  padding-bottom: 5px;" ></td>
+                                  </tr>
+                                  <tr class="row100 body">
+                                    <td id="l8c0_2"   style="padding-left:30px ;padding-top: 5px;  padding-bottom: 5px;"></td>
+                                    <td id="l8c1_2" style="padding-top: 5px;  padding-bottom: 5px;"></td>
+                                    <td id="l8c2_2" style="text-align: right;padding-right:30px ;padding-top: 5px;  padding-bottom: 5px;" ></td>
+                                  </tr>
+                                  <tr class="row100 body">
+                                    <td id="l9c0_2"  style="padding-left:30px ; padding-top: 5px;  padding-bottom: 5px;" ></td>
+                                    <td id="l9c1_2" style="padding-top: 5px;  padding-bottom: 5px;"></td>
+                                    <td id="l9c2_2" style="text-align: right;padding-right:30px ;padding-top: 5px;  padding-bottom: 5px;" ></td>
+                                  </tr>
+                                  <tr class="row100 body">
+                                    <td id="l10c0_2"   style="padding-left:30px ;padding-top: 5px;  padding-bottom: 5px; "></td>
+                                    <td id="l10c1_2" style="padding-top: 5px;  padding-bottom: 5px;"></td>
+                                    <td id="l10c2_2" style="text-align: right;padding-right:30px ;padding-top: 5px;  padding-bottom: 5px;" ></td>
+                                  </tr>
+                                                                  
+                              </tbody>
+                              
+                          </table>
+                      </div>
+                  </div>
+              </div>
+            </div>
+          </div><!-- /.col -->
+          <div class="col-md-2" style="margin-bottom: 20px;">
+          </div>
+        </div>
+        
+        
+        <div class="box-footer">
+
+        </div><!-- /.box-footer -->
+      </div><!-- /.box -->
+    </div><!-- /.col -->
+  </div><!-- /.row -->
+
+<script src="{% static 'cet/chart.js-3.2.1/package/dist/chart.min.js' %}"></script>
+<script>
+
+//LOSS RATIO
+const listebranches_loss_ratio = document.getElementById('listebranches_loss_ratio');
+const listezones_loss_ratio = document.getElementById('listezones_loss_ratio');
+const listesous_loss_ratio = document.getElementById('listesous_loss_ratio');
+
+
+
+var data = JSON.parse("{{data|escapejs}}");
+
+var ctx  = document.getElementById('part_prime_courtier').getContext('2d');
+var ctx2 = document.getElementById('part_prime_courtier_retro').getContext('2d');
+var ctx3 = document.getElementById('loss_ratio').getContext('2d');
+
+
+/*
+****
+****INITIALIZATION OF THE GRAPHS 
+****
+*/
+
+/*
+* PART PRIME COURTIER
+*/
+var part_prime_courtier = new Chart(ctx, {
+    type: "pie",
+  data: {
+    labels: ['Courtier '+data["part_prime_courtier"]+'%' ,'Cedante '+ (100 - data["part_prime_courtier"]) +'%'],
+    datasets: [
+      {
+        label: ["# of Votes"],
+        data: [data["part_prime_courtier"], 100 - data["part_prime_courtier"]],
+        backgroundColor: ["#04de00","#006fde"], 
+        //borderColor: ["rgba(255,99,132,1)","#FFFFFF"],
+        borderWidth: 2
+      }
+    ]
+  },
+  options:{
+    //cutout : "80%",
+    //circumference: 180,
+    //rotation : -90,
+    responsive: false,
+  }
+}
+);
+/*
+* PART PRIME COURTIER RETROCESSION
+*/
+var part_prime_courtier_retro = new Chart(ctx2, {
+    type: "pie",
+  data: {
+    labels: ['Courtier '+data["part_prime_courtier_retro"]+'%' ,'Cedante '+ (100 - data["part_prime_courtier_retro"]) +'%'],
+    datasets: [
+      {
+        label: ["# of Votes"],
+        data: [data["part_prime_courtier_retro"], 100 - data["part_prime_courtier_retro"]],
+        backgroundColor: ["#04de00","#006fde"], 
+        //borderColor: ["rgba(255,99,132,1)","#FFFFFF"],
+        borderWidth: 2
+      }
+    ]
+  },
+  options:{
+    //cutout : "80%",
+    //circumference: 180,
+    //rotation : -90,
+    responsive: false,
+  }
+}
+);
+/*
+* LOSS RATIO
+*/
+var chart_loss_ratio = new Chart(ctx3, {
+    type: "doughnut",
+  data: {
+    labels: [data["liste_loss_ratio"][0][3]+'%' ],
+    datasets: [
+      {
+        label: ["# of Votes"],
+        data: [data["liste_loss_ratio"][0][4], 100 - data["liste_loss_ratio"][0][4]],
+        backgroundColor: ["#04de00","#FFFFFF"], 
+        //borderColor: ["rgba(255,99,132,1)","#FFFFFF"],
+        borderWidth: 2
+      }
+    ]
+  },
+  options:{
+    cutout : "80%",
+    circumference: 180,
+    rotation : -90,
+    responsive: false,
+  }
+}
+);
+
+
+/*
+****
+****THE EVENT LISTENERS
+****
+*/
+/*
+* LISTENER FOR LOSS RATIO
+*/
+document.querySelectorAll('.loss_ratio').forEach(item => {
+    item.addEventListener('change', event => {
+      var branche = listebranches_loss_ratio.value;
+      var zone = listezones_loss_ratio.value;
+      var sous = listesous_loss_ratio.value;
+      console.log("branche :"+branche+" zone :"+zone+" sous :"+sous);
+      /*if ( (sous == 'R') || (sous == 'N') )
+      {
+        listezones_loss_ratio.value = '?';
+        zone = '?'
+      } */
+      var j = 0 ;
+      var i =0 ;
+      var stop = false ;
+      while ( ( i < data["liste_loss_ratio"].length  ) && !(stop) ) 
+      {
+
+        if (  ( data["liste_loss_ratio"][i][0] == branche  ) &&  ( data["liste_loss_ratio"][i][1] == zone  ) &&  ( data["liste_loss_ratio"][i][2] == sous  ))
+            {
+                j= i ;
+                stop =  true ;
+            }  
+        i =i +1 ;
+      }
+      console.log("stop "+stop);
+      if ( !stop )
+      {
+        chart_loss_ratio.data.datasets[0].data = [ 0 ,  100 ]; // Would update DATA
+        chart_loss_ratio.data.datasets[0].backgroundColor = ["rgb(255,0,0)","#FFFFFF"]; // Would update COLOR
+        chart_loss_ratio.data.labels[0] = 'Donnée non disp.' // Would update the LABEL
+        chart_loss_ratio.update(); 
+      }
+      else 
+      {
+        chart_loss_ratio.data.datasets[0].data = [  data["liste_loss_ratio"][j][4] ,  100- data["liste_loss_ratio"][j][4] ]; // Would update DATA
+        if (data["liste_loss_ratio"][j][3] <0 ) 
+        {
+            chart_loss_ratio.data.datasets[0].backgroundColor = ["rgb(255,0,0)","#FFFFFF"]; // Would update COLOR
+        }
+        else 
+        {
+            chart_loss_ratio.data.datasets[0].backgroundColor = ["#04de00","#FFFFFF"]; // Would update COLOR
+        }
+        
+        chart_loss_ratio.data.labels[0] = data["liste_loss_ratio"][j][3]+'%' // Would update the LABEL
+        chart_loss_ratio.update(); 
+      }
+
+    })
+});
+/*
+* EVENT LISTENER FOR INITIALIZATION OF THA ARRAY ENGAGEMENT SECURITE AND RISQUE DEFAUT
+*/
+window.onload = function() {
+  for (var i =1 ; i <11 ; i++)
+  {
+    //ENGAGEMENT SECURITE
+    const cell0 = document.getElementById('l'+i+'c0');
+    const cell1 = document.getElementById('l'+i+'c1');
+    const cell2 = document.getElementById('l'+i+'c2');
+    cell0.innerHTML = data["liste_engagement_securite"][i-1][0];
+    cell1.innerHTML = data["liste_engagement_securite"][i-1][2];
+    cell2.innerHTML = formatNumber(data["liste_engagement_securite"][i-1][3]);
+
+    //RISQUE DEFAUT
+    const cell3 = document.getElementById('l'+i+'c0_2');
+    const cell4 = document.getElementById('l'+i+'c1_2');
+    const cell5 = document.getElementById('l'+i+'c2_2');
+    cell3.innerHTML = data["liste_risque_defaut"][i-1][0];
+    cell4.innerHTML = data["liste_risque_defaut"][i-1][2];
+    cell5.innerHTML = formatNumber(data["liste_risque_defaut"][i-1][3]);
+  }
+  
+};
+function decoder_zone( zone){
+      if (zone =="*") return "INTERNATIONAL " ;
+      if (zone =="1") return "ALGERIE " ;
+      if (zone =="2") return "AFRIQUE ET MONDE ARABE " ;
+      if (zone =="3") return "AMERIQUE ASIE  " ;
+      if (zone =="4") return "EUROPE " ;
+      if (zone =="?") return "TOUTES ZONES " ;
+  };
+
+function decoder_souscription( zone){
+      if (zone =="A") return "ACCEP. " ;
+      if (zone =="B") return "RETRO. " ;
+      if (zone =="C") return "NET " ;
+  };
+
+  function formatNumber(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+}
+</script>
+
+{% endblock %}s
+
+{% block highlight_kri %}
+class="active"
+{% endblock %}
+{% block erm_treeview %}
+active
+{% endblock %}
+{% block erm_menu_open %}
+menu-open
+{% endblock %}
+{% block erm_menu_style %}
+style="display: block;"
+{% endblock %}

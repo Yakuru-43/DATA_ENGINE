@@ -1,0 +1,218 @@
+{% extends 'main/templates/index.html' %}
+{% load static %}
+{% block meta %}
+
+{% endblock %} 
+{% block header %}
+
+<!-- Content Header (Page header) -->
+  <section class="content-header">
+    <h1>
+      Tableau de bord
+    <small>Données du {{semestre}} du {{date_debut}} au {{date}} en DZD</small>
+    </h1>
+    <!--<ol class="breadcrumb">
+      <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+      <li class="active">Dashboard</li>
+    </ol>-->
+  </section>
+  
+{% endblock %}
+{% block content %}
+<div>
+BRANCHE <SELECT name="branche" style="margin-bottom: 10px; display: inline;" required id="listebranches">
+  <option value="" disabled >Branche</option>
+  {% for item in liste_branches %}
+    <option value="{{item.0}}"> {{item.1}} </option>
+  {% endfor %}
+  
+</SELECT>
+<!--
+<button class="btn btn-block btn-success btn-xs" style="width: 100px; 
+display: inline; 
+margin-bottom: 2px; 
+margin-left: 10px;" 
+id="filtrer">Filtrer</button>-->
+</div>
+          <h5><b>ACCEPTATION</b> </h5>
+          <div class="row">
+            <div class="col-md-3 col-sm-6 col-xs-12" >
+              <div class="info-box"  >
+                <span class="info-box-icon bg-aqua" ><i class="fas fa-chart-bar" style="line-height: 2;"></i></span>
+                <div class="info-box-content" style="height: 70px;">
+                  <span class="info-box-text" >BENEFICE/PERTE</span>
+                  <span class="info-box-number" style="text-align: right;" id="benef_acc"></span>
+                </div><!-- /.info-box-content -->
+              </div><!-- /.info-box -->
+            </div><!-- /.col -->
+            <div class="col-md-3 col-sm-6 col-xs-12">
+              <div class="info-box">
+                <span class="info-box-icon bg-red"><i class="fas fa-house-damage" style="line-height: 2;"></i></span>
+                <div class="info-box-content"> 
+                  <span class="info-box-text">SINISTRES</span>
+                  <span class="info-box-number" style="text-align: right;" id="sin_acc"></span>
+                </div><!-- /.info-box-content -->
+              </div><!-- /.info-box -->
+            </div><!-- /.col -->
+
+            <!-- fix for small devices only -->
+            <div class="clearfix visible-sm-block"></div>
+
+            <div class="col-md-3 col-sm-6 col-xs-12">
+              <div class="info-box">
+                <span class="info-box-icon bg-green"><i class="fas fa-coins" style="line-height: 2;"></i></span>
+                <div class="info-box-content">
+                  <span class="info-box-text">PRIMES NETTES</span>
+                  <span class="info-box-number" style="text-align: right;" id="prim_acc"></span>
+                </div><!-- /.info-box-content -->
+              </div><!-- /.info-box -->
+            </div><!-- /.col -->
+            <div class="col-md-3 col-sm-6 col-xs-12">
+              <div class="info-box">
+                <span class="info-box-icon bg-yellow"><i class="fas fa-chart-pie" style="line-height: 2;"></i></span>
+                <div class="info-box-content">
+                  <span class="info-box-text">SAP</span>
+                  <span class="info-box-number" style="text-align: right;" id="sap_acc"></span>
+                </div><!-- /.info-box-content -->
+              </div><!-- /.info-box -->
+            </div><!-- /.col -->
+          </div><!-- /.row -->
+
+          <h5><b>RETROCESSION</b></h5>
+          <div class="row">
+            <div class="col-md-3 col-sm-6 col-xs-12">
+              <div class="info-box">
+                <span class="info-box-icon bg-aqua" ><i class="fas fa-chart-bar" style="line-height: 2;"></i></span>
+                <div class="info-box-content">
+                  <span class="info-box-text">BENEFICE/PERTE</span>
+                  <span class="info-box-number" style="text-align: right;" id="benef_retro"></span>
+                </div><!-- /.info-box-content -->
+              </div><!-- /.info-box -->
+            </div><!-- /.col -->
+            <div class="col-md-3 col-sm-6 col-xs-12">
+              <div class="info-box">
+                <span class="info-box-icon bg-red"><i class="fas fa-house-damage" style="line-height: 2;"></i></span>
+                <div class="info-box-content"> 
+                  <span class="info-box-text">SINISTRES</span>
+                  <span class="info-box-number" style="text-align: right;"id="sin_retro"></span>
+                </div><!-- /.info-box-content -->
+              </div><!-- /.info-box -->
+            </div><!-- /.col -->
+
+            <!-- fix for small devices only -->
+            <div class="clearfix visible-sm-block"></div>
+
+            <div class="col-md-3 col-sm-6 col-xs-12">
+              <div class="info-box">
+                <span class="info-box-icon bg-green"><i class="fas fa-coins" style="line-height: 2;"></i></span>
+                <div class="info-box-content">
+                  <span class="info-box-text">PRIMES NETTES</span>
+                  <span class="info-box-number" style="text-align: right;"id="prim_retro"></span>
+                </div><!-- /.info-box-content -->
+              </div><!-- /.info-box -->
+            </div><!-- /.col -->
+            <div class="col-md-3 col-sm-6 col-xs-12">
+              <div class="info-box">
+                <span class="info-box-icon bg-yellow"><i class="fas fa-chart-pie" style="line-height: 2;"></i></span>
+                <div class="info-box-content">
+                  <span class="info-box-text">SAP</span>
+                  <span class="info-box-number" style="text-align: right;"id="sap_retro"></span>
+                </div><!-- /.info-box-content -->
+              </div><!-- /.info-box -->
+            </div><!-- /.col -->
+          </div><!-- /.row -->
+
+          <h5><b>NET</b></h5>
+          <!-- Info boxes -->
+          <div class="row">
+            <div class="col-md-3 col-sm-6 col-xs-12">
+              <div class="info-box">
+                <span class="info-box-icon bg-aqua" ><i class="fas fa-chart-bar" style="line-height: 2;"></i></span>
+                <div class="info-box-content">
+                  <span class="info-box-text">BENEFICE/PERTE</span>
+                  <span class="info-box-number" style="text-align: right;" id="benef_net"></span>
+                </div><!-- /.info-box-content -->
+              </div><!-- /.info-box -->
+            </div><!-- /.col -->
+            <div class="col-md-3 col-sm-6 col-xs-12">
+              <div class="info-box">
+                <span class="info-box-icon bg-red"><i class="fas fa-house-damage" style="line-height: 2;"></i></span>
+                <div class="info-box-content"> 
+                  <span class="info-box-text">SINISTRES</span>
+                  <span class="info-box-number" style="text-align: right;" id="sin_net"></span>
+                </div><!-- /.info-box-content -->
+              </div><!-- /.info-box -->
+            </div><!-- /.col -->
+
+            <!-- fix for small devices only -->
+            <div class="clearfix visible-sm-block"></div>
+
+            <div class="col-md-3 col-sm-6 col-xs-12">
+              <div class="info-box">
+                <span class="info-box-icon bg-green"><i class="fas fa-coins" style="line-height: 2;"></i></span>
+                <div class="info-box-content">
+                  <span class="info-box-text">PRIMES NETTES</span>
+                  <span class="info-box-number" style="text-align: right;"id="prim_net"></span>
+                </div><!-- /.info-box-content -->
+              </div><!-- /.info-box -->
+            </div><!-- /.col -->
+            <div class="col-md-3 col-sm-6 col-xs-12">
+              <div class="info-box">
+                <span class="info-box-icon bg-yellow"><i class="fas fa-chart-pie" style="line-height: 2;"></i></span>
+                <div class="info-box-content">
+                  <span class="info-box-text">SAP</span>
+                  <span class="info-box-number" style="text-align: right;"id="sap_net"></span>
+                </div><!-- /.info-box-content -->
+              </div><!-- /.info-box -->
+            </div><!-- /.col -->
+          </div><!-- /.row -->
+          
+        
+
+<script>
+    var data = JSON.parse("{{data|escapejs}}");
+    console.log(data);
+    const listebranches = document.getElementById('listebranches');
+    listebranches.value = 24;
+
+    const benef_acc = document.getElementById('benef_acc');   const benef_net = document.getElementById('benef_net'); const benef_retro = document.getElementById('benef_retro');  
+    const sin_acc = document.getElementById('sin_acc');       const sin_net = document.getElementById('sin_net');     const sin_retro = document.getElementById('sin_retro');
+    const prim_acc = document.getElementById('prim_acc');     const prim_net = document.getElementById('prim_net');   const prim_retro = document.getElementById('prim_retro');
+    const sap_acc = document.getElementById('sap_acc');       const sap_net = document.getElementById('sap_net');     const sap_retro = document.getElementById('sap_retro');
+
+    benef_acc.innerHTML = data["data_acceptation"][24][0]; benef_net.innerHTML = data["data_net"][24][0]; benef_retro.innerHTML = data["data_retro"][24][0]; 
+    sin_acc.innerHTML = data["data_acceptation"][24][1];   sin_net.innerHTML = data["data_net"][24][1];   sin_retro.innerHTML = data["data_retro"][24][1];
+    prim_acc.innerHTML = data["data_acceptation"][24][2];  prim_net.innerHTML = data["data_net"][24][2];  prim_retro.innerHTML = data["data_retro"][24][2];
+    sap_acc.innerHTML = data["data_acceptation"][24][3];   sap_net.innerHTML = data["data_net"][24][3];   sap_retro.innerHTML = data["data_retro"][24][3];
+
+
+
+    listebranches.addEventListener('change', function() {  
+    var branche = listebranches.value;
+
+    benef_acc.innerHTML = data["data_acceptation"][branche][0]; benef_net.innerHTML = data["data_net"][branche][0]; benef_retro.innerHTML = data["data_retro"][branche][0]; 
+    sin_acc.innerHTML = data["data_acceptation"][branche][1];   sin_net.innerHTML = data["data_net"][branche][1];   sin_retro.innerHTML = data["data_retro"][branche][1];
+    prim_acc.innerHTML = data["data_acceptation"][branche][2];  prim_net.innerHTML = data["data_net"][branche][2];  prim_retro.innerHTML = data["data_retro"][branche][2];
+    sap_acc.innerHTML = data["data_acceptation"][branche][3];   sap_net.innerHTML = data["data_net"][branche][3];   sap_retro.innerHTML = data["data_retro"][branche][3];
+
+    
+
+    }); 
+
+</script>
+
+
+
+{% endblock %}
+{% block highlight_dashboard  %}
+  class="active"
+{% endblock %}
+{% block CET_treeview %}
+active
+{% endblock %}
+{% block CET_menu_open %}
+menu-open
+{% endblock %}
+{% block CET_menu_style %}
+style="display: block;"
+{% endblock %}

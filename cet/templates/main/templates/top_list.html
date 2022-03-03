@@ -1,0 +1,344 @@
+{% extends 'main/templates/index.html' %}
+{% load static %}
+{% block header %}
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+  <h1>
+    TOP LIST
+    <small> </small>
+  </h1>
+
+</section>
+
+{% endblock %}
+
+
+
+{% block content %}
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="box">
+      <div class="box-header with-border">
+        <!--<h3 class="box-title">ACCEPTATION</h3>-->
+
+      </div><!-- /.box-header -->
+      <div class="box-body">
+        
+        <div class="row">
+          <div class="col-md-12" style="margin-bottom: 30px;">
+            
+              <div class="chart-container" style=" width: 90% ; margin: 0 auto;" >  
+                  <canvas id="top_prime" > </canvas>
+                  <!--<label style="text-align: center;  display: block;" for="myChart"> Marge de réassurance </label> -->
+              </div>
+
+          </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12" style="margin-bottom: 30px;">
+              
+                <div class="chart-container" style=" width: 90% ; margin: 0 auto;" >  
+                    <canvas id="top_sinistre" > </canvas>
+                    <!--<label style="text-align: center;  display: block;" for="myChart"> Marge de réassurance </label> -->
+                </div>
+  
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12" style="margin-bottom: 30px;">
+              
+                <div class="chart-container" style=" width: 90% ; margin: 0 auto;" >  
+                    <canvas id="top_engagement_acc" > </canvas>
+                    <!--<label style="text-align: center;  display: block;" for="myChart"> Marge de réassurance </label> -->
+                </div>
+  
+            </div>
+        </div>
+    
+        <div class="row">
+            <div class="col-md-12" style="margin-bottom: 30px;">
+                <div class="chart-container" style=" width: 90% ; margin: 0 auto;" >  
+                    <canvas id="top_engagement_retro" > </canvas>
+                    <!--<label style="text-align: center;  display: block;" for="myChart"> Marge de réassurance </label> -->
+                </div>
+            </div>
+        </div>
+        
+        <div class="box-footer">
+
+        </div><!-- /.box-footer -->
+      </div><!-- /.box -->
+    </div><!-- /.col -->
+  </div><!-- /.row -->
+
+<script src="{% static 'cet/chart.js-3.2.1/package/dist/chart.min.js' %}"></script>
+<script>
+
+
+var data = JSON.parse("{{data|escapejs}}");
+
+var ctx1 = document.getElementById('top_prime').getContext('2d');
+var ctx2 = document.getElementById('top_sinistre').getContext('2d');
+var ctx3 = document.getElementById('top_engagement_acc').getContext('2d');
+var ctx4 = document.getElementById('top_engagement_retro').getContext('2d');
+
+/*
+****
+****INITIALIZATION OF THE GRAPHS 
+****
+*/
+/*
+* TOP ENGAGEMENT RETRO
+*/
+var top_engagement_retro = new Chart(ctx4, {
+  type: 'bar',
+  data: {
+    labels: [data["liste_top_engagement_retro"][0][1],
+            data["liste_top_engagement_retro"][1][1], 
+            data["liste_top_engagement_retro"][2][1], 
+            data["liste_top_engagement_retro"][3][1], 
+            data["liste_top_engagement_retro"][4][1], 
+ 
+
+            ],
+    datasets: [{
+          label: 'TOP ENGAGEMENT RETROCESSION',
+          data: [data["liste_top_engagement_retro"][0][2],
+                 data["liste_top_engagement_retro"][1][2], 
+                 data["liste_top_engagement_retro"][2][2], 
+                 data["liste_top_engagement_retro"][3][2], 
+                 data["liste_top_engagement_retro"][4][2], 
+
+
+                 ],
+          backgroundColor: [
+            'rgba(255, 99, 132, 1)',
+            'rgba(255, 159, 64, 1)',
+            'rgba(255, 205, 86, 1)',
+            'rgba(75, 192, 192, 1)',
+            'rgba(54, 162, 235, 1)',
+            'rgba(153, 102, 255, 1)',
+            'rgba(201, 203, 207, 1)' ,
+            'rgba(143, 203, 227, 1)' ,
+          ],
+          borderColor: [
+            'rgb(255, 99, 132)',
+            'rgb(255, 159, 64)',
+            'rgb(255, 205, 86)',
+            'rgb(75, 192, 192)',
+            'rgb(54, 162, 235)',
+            'rgb(153, 102, 255)',
+            'rgb(201, 203, 207)' ,
+            'rgb(143, 203, 227)' ,
+          ],
+          borderWidth: 1
+        }]
+      },
+  options: {
+    indexAxis: 'y',
+    //responsive: false,
+    scales: {
+      y: {
+        beginAtZero: true
+      }
+    }
+  },
+
+}
+);
+/*
+* TOP ENGAGEMENT ACC
+*/
+var top_engagement_acc = new Chart(ctx3, {
+  type: 'bar',
+  data: {
+    labels: [data["liste_top_engagement_acc"][0][1],
+            data["liste_top_engagement_acc"][1][1], 
+            data["liste_top_engagement_acc"][2][1], 
+            data["liste_top_engagement_acc"][3][1], 
+            data["liste_top_engagement_acc"][4][1], 
+            
+             
+            ],
+    datasets: [{
+          label: 'TOP ENGAGEMENT ACCEPTATION',
+          data: [data["liste_top_engagement_acc"][0][2],
+                 data["liste_top_engagement_acc"][1][2], 
+                 data["liste_top_engagement_acc"][2][2], 
+                 data["liste_top_engagement_acc"][3][2], 
+                 data["liste_top_engagement_acc"][4][2], 
+                  
+                  
+                 ],
+          backgroundColor: [
+            'rgba(255, 99, 132, 1)',
+            'rgba(255, 159, 64, 1)',
+            'rgba(255, 205, 86, 1)',
+            'rgba(75, 192, 192, 1)',
+            'rgba(54, 162, 235, 1)',
+            'rgba(153, 102, 255, 1)',
+            'rgba(201, 203, 207, 1)' ,
+            'rgba(143, 203, 227, 1)' ,
+          ],
+          borderColor: [
+            'rgb(255, 99, 132)',
+            'rgb(255, 159, 64)',
+            'rgb(255, 205, 86)',
+            'rgb(75, 192, 192)',
+            'rgb(54, 162, 235)',
+            'rgb(153, 102, 255)',
+            'rgb(201, 203, 207)' ,
+            'rgb(143, 203, 227)' ,
+          ],
+          borderWidth: 1
+        }]
+      },
+  options: {
+    indexAxis: 'y',
+    
+    scales: {
+      y: {
+        beginAtZero: true
+      },
+      
+    }
+  },
+
+}
+);
+/*
+* TOP SINISTRE
+*/
+var top_sinistre = new Chart(ctx2, {
+  type: 'bar',
+  data: {
+    labels: [data["liste_top_sinistre"][0][1],
+            data["liste_top_sinistre"][1][1], 
+            data["liste_top_sinistre"][2][1], 
+            data["liste_top_sinistre"][3][1], 
+            data["liste_top_sinistre"][4][1], 
+
+        ],
+    datasets: [{
+          label: 'TOP sinistre',
+          data: [data["liste_top_sinistre"][0][2],
+                 data["liste_top_sinistre"][1][2], 
+                 data["liste_top_sinistre"][2][2], 
+                 data["liste_top_sinistre"][3][2], 
+                 data["liste_top_sinistre"][4][2], 
+
+                ],
+          backgroundColor: [
+            'rgba(255, 99, 132, 1)',
+            'rgba(255, 159, 64, 1)',
+            'rgba(255, 205, 86, 1)',
+            'rgba(75, 192, 192, 1)',
+            'rgba(54, 162, 235, 1)',
+            'rgba(153, 102, 255, 1)',
+            'rgba(201, 203, 207, 1)' ,
+            'rgba(143, 203, 227, 1)' ,
+          ],
+          borderColor: [
+            'rgb(255, 99, 132)',
+            'rgb(255, 159, 64)',
+            'rgb(255, 205, 86)',
+            'rgb(75, 192, 192)',
+            'rgb(54, 162, 235)',
+            'rgb(153, 102, 255)',
+            'rgb(201, 203, 207)' ,
+            'rgb(143, 203, 227)' ,
+          ],
+          borderWidth: 1
+        }]
+      },
+  options: {
+    indexAxis: 'y',
+    //responsive: false,
+    scales: {
+      y: {
+        beginAtZero: true
+      }
+    }
+  },
+
+}
+);
+/*
+* TOP PRIME
+*/
+var top_prime = new Chart(ctx1, {
+  type: 'bar',
+  data: {
+    labels: [    data["liste_top_prime"][0][1],
+                 data["liste_top_prime"][1][1], 
+                 data["liste_top_prime"][2][1], 
+                 data["liste_top_prime"][3][1], 
+                 data["liste_top_prime"][4][1], 
+
+                ],
+    datasets: [{
+          label: 'TOP PRIME',
+          data: [data["liste_top_prime"][0][2],
+                 data["liste_top_prime"][1][2], 
+                 data["liste_top_prime"][2][2], 
+                 data["liste_top_prime"][3][2], 
+                 data["liste_top_prime"][4][2], 
+
+                ],
+          backgroundColor: [
+            'rgba(255, 99, 132, 1)',
+            'rgba(255, 159, 64, 1)',
+            'rgba(255, 205, 86, 1)',
+            'rgba(75, 192, 192, 1)',
+            'rgba(54, 162, 235, 1)',
+            'rgba(153, 102, 255, 1)',
+            'rgba(201, 203, 207, 1)' ,
+            'rgba(143, 203, 227, 1)' ,
+          ],
+          borderColor: [
+            'rgb(255, 99, 132)',
+            'rgb(255, 159, 64)',
+            'rgb(255, 205, 86)',
+            'rgb(75, 192, 192)',
+            'rgb(54, 162, 235)',
+            'rgb(153, 102, 255)',
+            'rgb(201, 203, 207)' ,
+            'rgb(143, 203, 227)' ,
+          ],
+          borderWidth: 1
+        }]
+      },
+  options: {
+    indexAxis: 'y',
+    //responsive: false,
+    scales: {
+      y: {
+        beginAtZero: true
+      }
+    }
+  },
+
+}
+);
+
+
+
+
+</script>
+
+{% endblock %}s
+
+{% block highlight_top_list %}
+class="active"
+{% endblock %}
+{% block dashbord_treeview %}
+active
+{% endblock %}
+{% block dashbord_menu_open %}
+menu-open
+{% endblock %}
+{% block dashbord_menu_style %}
+style="display: block;"
+{% endblock %}

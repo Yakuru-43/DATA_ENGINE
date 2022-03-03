@@ -1,0 +1,409 @@
+{% extends 'main/templates/index.html' %}
+{% load static %}
+
+{% block header %}
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+  <h1>
+    Etats Excel Généraux
+    <small>Les bilans antérieurs à 2009 ne sont pas disponibles. </small>
+  </h1>
+  <!--<ol class="breadcrumb">
+      <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+      <li class="active">Dashboard</li>
+    </ol>-->
+</section>
+
+{% endblock %}
+
+{% block content %}
+
+</style>
+<div class="row">
+  <div class="col-md-12">
+    <div class="box">
+      <div class="box-header with-border">
+        <h3 class="box-title">ACCEPTATION</h3>
+
+      </div><!-- /.box-header -->
+      <div class="box-body">
+        <div class="row">
+          <div class="col-md-4">
+            <!-- Primary box -->
+            <div class="box box-solid box-primary collapsed-box">
+              <div class="box-header">
+                <h3 class="box-title">DEPOT</h3>
+                <div class="box-tools pull-right">
+                  <button class="btn btn-primary btn-sm" data-widget="collapse"><i class="fa fa-plus"></i></button>
+                </div>
+              </div>
+              <div class="box-body" style="display: none; height: 200px;">
+                <div class="nav-tabs-custom">
+                  <ul class="nav nav-tabs">
+                    <li class="active"><a href="#tab_1" data-toggle="tab">PAR BILAN</a></li>
+                    
+
+
+                    <li class="pull-right"><a href="#" class="text-muted"><i class="fa fa-gear"></i></a></li>
+                  </ul>
+                  <div class="tab-content">
+                    <div class="tab-pane active" id="tab_1">
+
+                      <form action="{% url 'cet:excel'  %}" method="get" style="margin-bottom: 0px;">
+                        <SELECT id="annee" name="annee" style="margin-top: 0px;margin-bottom: 10px;" required>
+                          <option value="" disabled selected>Année</option>
+                          {% for item in list_cet %}
+                          <option value="{{item.0}}"> {{item.0}} </option>
+                          {% endfor %}
+                        </SELECT>
+                        <SELECT id="trim" name="trim" style="margin-top: 0px;margin-bottom: 10px;" required>
+                          <option value="" disabled selected>Période</option>
+                        </SELECT>
+                        
+                        <input type="hidden" name="code_view" value="00GEN_DEPOT" required>
+                        <button type="submit" class="btn btn-block btn-success btn-xs"
+                          style="width: 100;" id="test01">Soumettre</button>
+                      </form>
+
+
+                    </div><!-- /.tab-pane -->
+                    
+
+                  </div><!-- /.tab-content -->
+                </div><!-- nav-tabs-custom -->
+
+              </div><!-- /.box-body -->
+            </div><!-- /.box -->
+          </div><!-- /.col -->
+          <div class="col-md-4">
+            <!-- Primary box -->
+            <div class="box box-solid box-primary collapsed-box">
+              <div class="box-header">
+                <h3 class="box-title">LIABILITY EPI </h3>
+                <div class="box-tools pull-right">
+                  <button class="btn btn-primary btn-sm" data-widget="collapse"><i class="fa fa-plus"></i></button>
+                </div>
+              </div>
+              <div class="box-body" style="display: none; height: 200px;">
+                <div class="nav-tabs-custom">
+                  <ul class="nav nav-tabs">
+                    <li class="active"><a href="#tab_1_RETRO" data-toggle="tab">PAR ANNEE</a></li>
+                    
+
+
+                    <li class="pull-right"><a href="#" class="text-muted"><i class="fa fa-gear"></i></a></li>
+                  </ul>
+                  <div class="tab-content">
+                    <div class="tab-pane active" id="tab_1_RETRO">
+
+                      <form action="{% url 'cet:excel'  %}" method="get" style="margin-bottom: 0px;">
+                        <SELECT id="annee" name="annee" style="margin-top: 0px;margin-bottom: 10px;" required>
+                          <option value="" disabled selected>Année</option>
+                          {% for item in list_cet %}
+                          <option value="{{item.0}}"> {{item.0}} </option>
+                          {% endfor %}
+                        </SELECT>
+                        
+                        
+                        
+                        <input type="hidden" name="code_view" value="01GEN_LIABI" required>
+                        <button type="submit" class="btn btn-block btn-success btn-xs"
+                          style="width: 100;">Soumettre</button>
+                      </form>
+
+
+                    </div><!-- /.tab-pane -->
+                    
+
+                  </div><!-- /.tab-content -->
+                </div><!-- nav-tabs-custom -->
+
+              </div><!-- /.box-body -->
+            </div><!-- /.box -->
+          </div><!-- /.col -->
+          
+          <div class="col-md-4">
+            <!-- Primary box -->
+            <div class="box box-solid box-primary collapsed-box">
+              <div class="box-header">
+                <h3 class="box-title">ETAT OUTSTANDING </h3>
+                <div class="box-tools pull-right">
+                  <button class="btn btn-primary btn-sm" data-widget="collapse"><i class="fa fa-plus"></i></button>
+                </div>
+              </div>
+              <div class="box-body" style="display: none; height: 200px;">
+                <div class="nav-tabs-custom">
+                  
+                  <div class="tab-content">
+                    <div class="tab-pane active" id="tab_1_RETRO">
+
+                      <form action="{% url 'cet:excel'  %}" method="get" style="margin-bottom: 0px;">
+                        <div class="form-group">
+                            <label for="cedante">Code cédante</label>
+                            <!--<input type="text" class="form-control" id="cedante" name="cedante" placeholder="Code cédante">-->
+                            <select name="cedante" id="cedante">
+                                <option value="" selected  > Toutes Cédantes </option>
+                                {% for item in liste_cedante %}
+                                    <option value="{{item.0}}"> {{item.1}} </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="brocker">Code broker</label>
+                            <!--<input type="text" class="form-control" id="brocker" name="brocker" placeholder="Code brocker">-->
+                            <select name="brocker" id="brocker">
+                                <option value="" selected  > Tous Broker </option>
+                                {% for item in liste_cedante %}
+                                    <option value="{{item.0}}"> {{item.1}} </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <input type="hidden" name="code_view" value="02OUT" required>
+                        <button type="submit" class="btn btn-block btn-success btn-xs"
+                          style="width: 100;">Soumettre</button>
+                      </form>
+
+
+                    </div><!-- /.tab-pane -->
+                    
+
+                  </div><!-- /.tab-content -->
+                </div><!-- nav-tabs-custom -->
+
+              </div><!-- /.box-body -->
+            </div><!-- /.box -->
+          </div><!-- /.col -->
+
+
+
+
+        </div>
+        <div class="row">
+
+        </div>
+
+        <div class="row">
+
+            <div class="col-md-4">
+
+            </div>
+        </div><!-- /.col -->
+        <div class="row">
+          <div class="col-md-4">
+
+          </div>
+        </div><!-- ./box-body -->
+        <div class="box-footer">
+
+        </div><!-- /.box-footer -->
+      </div><!-- /.box -->
+    </div><!-- /.col -->
+  </div><!-- /.row -->
+
+  <div class="col-md-12">
+    <div class="box">
+      <div class="box-header with-border">
+        <h3 class="box-title">RETROCESSION</h3>
+
+      </div><!-- /.box-header -->
+      <div class="box-body">
+        <div class="row">
+          <div class="col-md-4">
+            <!-- Primary box -->
+            <div class="box box-solid box-primary collapsed-box">
+              <div class="box-header">
+                <h3 class="box-title">DEPOT </h3>
+                <div class="box-tools pull-right">
+                  <button class="btn btn-primary btn-sm" data-widget="collapse"><i class="fa fa-plus"></i></button>
+                </div>
+              </div>
+              <div class="box-body" style="display: none; height: 200px;">
+                <div class="nav-tabs-custom">
+                  <ul class="nav nav-tabs">
+                    <li class="active"><a href="#tab_1_RETRO" data-toggle="tab">PAR BILAN</a></li>
+                    
+
+
+                    <li class="pull-right"><a href="#" class="text-muted"><i class="fa fa-gear"></i></a></li>
+                  </ul>
+                  <div class="tab-content">
+                    <div class="tab-pane active" id="tab_1_RETRO">
+
+                      <form action="{% url 'cet:excel'  %}" method="get" style="margin-bottom: 0px;">
+                        <SELECT id="annee" name="annee" style="margin-top: 0px;margin-bottom: 10px;" required>
+                          <option value="" disabled selected>Année</option>
+                          {% for item in list_cet %}
+                          <option value="{{item.0}}"> {{item.0}} </option>
+                          {% endfor %}
+                        </SELECT>
+                        <SELECT id="trim" name="trim" style="margin-top: 0px;margin-bottom: 10px;" required>
+                          <option value="" disabled selected>Période</option>
+                        </SELECT>
+                        
+                        
+                        <input type="hidden" name="code_view" value="00GEN_DEPOT_RETRO" required>
+                        <button type="submit" class="btn btn-block btn-success btn-xs"
+                          style="width: 100;">Soumettre</button>
+                      </form>
+
+
+                    </div><!-- /.tab-pane -->
+                    
+
+                  </div><!-- /.tab-content -->
+                </div><!-- nav-tabs-custom -->
+
+              </div><!-- /.box-body -->
+            </div><!-- /.box -->
+          </div><!-- /.col -->
+
+          <div class="col-md-4">
+            <!-- Primary box -->
+            <div class="box box-solid box-primary collapsed-box">
+              <div class="box-header">
+                <h3 class="box-title">ETAT OUTSTANDING </h3>
+                <div class="box-tools pull-right">
+                  <button class="btn btn-primary btn-sm" data-widget="collapse"><i class="fa fa-plus"></i></button>
+                </div>
+              </div>
+              <div class="box-body" style="display: none; height: 200px;">
+                <div class="nav-tabs-custom">
+                  
+                  <div class="tab-content">
+                    <div class="tab-pane active" id="tab_1_RETRO">
+
+                      <form action="{% url 'cet:excel'  %}" method="get" style="margin-bottom: 0px;">
+                        <div class="form-group">
+                            <label for="participant">Code participant</label>
+                            <!--<input type="text" class="form-control" id="participant" name="participant" placeholder="Code participant">-->
+                            <select name="participant" id="participant">
+                                <option value="" selected  > Tous Participants </option>
+                                {% for item in liste_cedante %}
+                                    <option value="{{item.0}}"> {{item.1}} </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        
+
+                        <input type="hidden" name="code_view" value="03OUT_RETRO" required>
+                        <button type="submit" class="btn btn-block btn-success btn-xs"
+                          style="width: 100;">Soumettre</button>
+                      </form>
+
+
+                    </div><!-- /.tab-pane -->
+                    
+
+                  </div><!-- /.tab-content -->
+                </div><!-- nav-tabs-custom -->
+
+              </div><!-- /.box-body -->
+            </div><!-- /.box -->
+          </div><!-- /.col -->
+          
+
+          
+        </div>
+        <div class="row">
+
+          
+
+          
+
+        </div>
+      </div><!-- ./box-body -->
+      
+    </div><!-- /.box -->
+  </div><!-- /.col -->
+
+
+  <div class="row">
+    <div class="col-md-10" style="margin-left: 15px;">
+
+    </div>
+  </div>
+  <div class="modal"></div>
+  <script>
+    var data = JSON.parse("{{data|escapejs}}");
+
+
+    document.querySelectorAll('#annee').forEach(item => {
+      item.addEventListener('change', event => {
+        var suiv = item.nextElementSibling;
+        //DELETE THE OPTIONS 
+        var length = suiv.options.length;
+        for (i = length-1; i >= 0; i--) {
+        suiv.options[i] = null;
+        }
+
+        // GET THE VALUE SELECTED BY THE USER 
+        var annee = item.options[item.selectedIndex].value ;
+        /*
+        * FIND THE SEMESTERS OF THE SELECTED YEAR 
+        */
+        var j = 0 ;
+        var i =0 ;
+        var stop = false ;
+        while ( ( i < data["liste_cet"].length ) && !(stop) ) 
+        {
+        if (  ( data["liste_cet"][i][0] == annee  )  )
+            {
+                j= i ;
+                stop =  true ;
+                if ( data["liste_cet"][i][1] != 0  )
+                {
+                    //console.log("le premier trimestre existe");
+                    var opt = document.createElement('option');
+                    opt.value = '1ER TRIMESTRE';
+                    opt.innerHTML = '1ER TRIMESTRE';
+                    suiv.appendChild(opt);
+                }
+                if ( data["liste_cet"][i][2] != 0  )
+                {
+                    //console.log("le premier semestre existe");
+                    var opt = document.createElement('option');
+                    opt.value = '1ER SEMESTRE';
+                    opt.innerHTML = '1ER SEMESTRE';
+                    suiv.appendChild(opt);
+                }
+                if ( data["liste_cet"][i][3] != 0  )
+                {
+                    //console.log("le 3eme semestre existe");
+                    var opt = document.createElement('option');
+                    opt.value = '3EME TRIMESTRE';
+                    opt.innerHTML = '3EME TRIMESTRE';
+                    suiv.appendChild(opt);
+                }
+                if ( data["liste_cet"][i][4] != 0  )
+                {
+                    //console.log("le 2eme semestre existe");
+                    var opt = document.createElement('option');
+                    opt.value = '2EME SEMESTRE';
+                    opt.innerHTML = '2EME SEMESTRE';
+                    suiv.appendChild(opt);
+                }
+            }  
+        i =i +1 ;
+        }
+      })
+    })
+  </script>
+    <!-- jQuery 2.1.3 -->
+  <script src=" {% static 'cet/plugins/jQuery/jQuery-2.1.3.min.js' %} "></script>
+  
+
+{% endblock %}
+{% block highlight_repot_gen %}
+class="active"
+{% endblock %}
+{% block repot_gen_treeview %}
+active
+{% endblock %}
+{% block repot_gen_menu_open %}
+menu-open
+{% endblock %}
+{% block repot_gen_menu_style %}
+style="display: block;"
+{% endblock %}

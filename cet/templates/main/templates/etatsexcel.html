@@ -1,0 +1,1074 @@
+{% extends 'main/templates/index.html' %}
+{% load static %}
+
+{% block header %}
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+  <h1>
+    Etats Excel
+    <small>Les bilans antérieurs à 2009 ne sont pas disponibles. </small>
+  </h1>
+  <!--<ol class="breadcrumb">
+      <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+      <li class="active">Dashboard</li>
+    </ol>-->
+</section>
+
+{% endblock %}
+
+{% block content %}
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="box">
+      <div class="box-header with-border">
+        <h3 class="box-title">ACCEPTATION</h3>
+
+      </div><!-- /.box-header -->
+      <div class="box-body">
+        <div class="row">
+          <div class="col-md-4">
+            <!-- Primary box -->
+            <div class="box box-solid box-primary collapsed-box">
+              <div class="box-header">
+                <h3 class="box-title">CET DETAIL </h3>
+                <div class="box-tools pull-right">
+                  <button class="btn btn-primary btn-sm" data-widget="collapse"><i class="fa fa-plus"></i></button>
+                </div>
+              </div>
+              <div class="box-body" style="display: none; height: 200px;">
+                <div class="nav-tabs-custom">
+                  <ul class="nav nav-tabs">
+                    <li class="active"><a href="#tab_1" data-toggle="tab">PAR BILAN</a></li>
+                    <li><a href="#tab_2" data-toggle="tab">PAR DATES</a></li>
+
+
+                    <li class="pull-right"><a href="#" class="text-muted"><i class="fa fa-gear"></i></a></li>
+                  </ul>
+                  <div class="tab-content">
+                    <div class="tab-pane active" id="tab_1">
+
+                      <form action="{% url 'cet:excel'  %}" method="get" style="margin-bottom: 0px;">
+                        <SELECT id="annee" name="annee" style="margin-top: 0px;margin-bottom: 10px;" required>
+                          <option value="" disabled selected>Année</option>
+                          {% for item in list_cet %}
+                          <option value="{{item.0}}"> {{item.0}} </option>
+                          {% endfor %}
+                        </SELECT>
+                        <SELECT id="trim" name="trim" style="margin-top: 0px;margin-bottom: 10px;" required>
+                          <option value="" disabled selected>Période</option>
+                          
+                        </SELECT>
+                        <SELECT class="label2" style="margin-top: 0px;margin-bottom: 10px; width: 219px;" name="branche"  required >
+                          <option value="" disabled>Branche</option>
+                          {% for item in liste_branches %}
+                            <option value="{{item.0}}"> {{item.1}} </option>
+                          {% endfor %}
+                          
+                        </SELECT>
+                        <SELECT class="label3" style="margin-top: 0px;margin-bottom: 10px;" name="direction" required>
+                          <option value="" disabled>Direction</option>
+                          {% for item in liste_directions %}
+                            <option value="{{item.0}}"> {{item.1}} </option>
+                          {% endfor %}
+                        </SELECT>
+                        <input type="hidden" name="code_view" value="001A" required>
+                        <button type="submit" class="btn btn-block btn-success btn-xs"
+                          style="width: 100;" id="test01">Soumettre</button>
+                      </form>
+
+
+                    </div><!-- /.tab-pane -->
+                    <div class="tab-pane" id="tab_2">
+                      <p>TEMPS REEL</p>
+                      <form action="{% url 'cet:excel'  %}" method="get" style="margin-top: 0px; margin-bottom: 0px;">
+                        <SELECT class="label2" style="margin-top: 0px;margin-bottom: 10px; width: 219px;" name="branche"  required>
+                          <option value="" disabled>Branche</option>
+                          {% for item in liste_branches %}
+                            <option value="{{item.0}}"> {{item.1}} </option>
+                          {% endfor %}
+                        </SELECT>
+                        <SELECT class="label3" style="margin-top: 0px;margin-bottom: 10px;" name="direction" required>
+                          <option value="" disabled>Direction</option>
+                          {% for item in liste_directions %}
+                            <option value="{{item.0}}"> {{item.1}} </option>
+                          {% endfor %}
+                        </SELECT>
+                        <input type="hidden" name="code_view" value="TR1A" required>
+                        <button type="submit" class="btn btn-block btn-success btn-xs"
+                          style="width: 100;">Soumettre</button>
+                      </form>
+
+                    </div><!-- /.tab-pane -->
+
+                  </div><!-- /.tab-content -->
+                </div><!-- nav-tabs-custom -->
+
+              </div><!-- /.box-body -->
+            </div><!-- /.box -->
+          </div><!-- /.col -->
+
+          <div class="col-md-4">
+            <!-- Primary box -->
+            <div class="box box-solid box-primary collapsed-box">
+              <div class="box-header">
+                <h3 class="box-title">PRIMES </h3>
+                <div class="box-tools pull-right">
+                  <button class="btn btn-primary btn-sm" data-widget="collapse"><i class="fa fa-plus"></i></button>
+
+                </div>
+              </div>
+              <div class="box-body" style="display: none;height: 200px;">
+                <div class="nav-tabs-custom">
+                  <ul class="nav nav-tabs">
+                    <li class="active"><a href="#tab_1_prime" data-toggle="tab">PAR BILAN</a></li>
+                    <li><a href="#tab_2_prime" data-toggle="tab">PAR DATES</a></li>
+
+
+                    <li class="pull-right"><a href="#" class="text-muted"><i class="fa fa-gear"></i></a></li>
+                  </ul>
+                  <div class="tab-content">
+                    <div class="tab-pane active" id="tab_1_prime">
+
+                      <form action="{% url 'cet:excel'  %}" method="get" style="margin-bottom: 0px;">
+                        <SELECT id="annee" name="annee" style="margin-bottom: 10px;" required>
+                          <option value="" disabled selected>Année</option>
+                          {% for item in list_cet %}
+                          <option value="{{item.0}}"> {{item.0}} </option>
+                          {% endfor %}
+                        </SELECT>
+                        <SELECT name="trim" name="trim" style="margin-bottom: 10px;" required>
+                          <option value="" disabled selected>Période</option>
+                          
+                        </SELECT>
+                        <SELECT class="label2" style="margin-top: 0px;margin-bottom: 10px; width: 219px;" name="branche"  required>
+                          <option value="" disabled>Branche</option>
+                          {% for item in liste_branches %}
+                            <option value="{{item.0}}"> {{item.1}} </option>
+                          {% endfor %}
+                        </SELECT>
+                        <SELECT class="label3" style="margin-top: 0px;margin-bottom: 10px;" name="direction" required>
+                          <option value="" disabled>Direction</option>
+                          {% for item in liste_directions %}
+                            <option value="{{item.0}}"> {{item.1}} </option>
+                          {% endfor %}
+                        </SELECT>
+                        <input type="hidden" name="code_view" value="002A" required>
+                        <button type="submit" class="btn btn-block btn-success btn-xs"
+                          style="width: 100; margin-top: 0px;">Soumettre</button>
+                      </form>
+
+
+                    </div><!-- /.tab-pane -->
+                    <div class="tab-pane" id="tab_2_prime">
+                      
+                        <form action="{% url 'cet:excel'  %}" method="get" style="margin-bottom: 0px;">
+                        
+                          <ppp>Du</ppp>
+                          <input type="date" name="date_debut" value="{{date_debut}}"
+                            style="pointer-events: none; height: 19px; vertical-align: middle; padding-top:
+                            0px;padding-bottom: 0px;line-height: normal;">
+                          <ppp>au</ppp>
+                          <input type="date" name="date_fin" required
+                            style="height: 19px; vertical-align: middle ;
+                            padding-top: 0px;padding-bottom: 0px;line-height: normal;">
+                      
+                        <input type="checkbox" name="tr" id="test" style="vertical-align: middle; margin-top: 0px;"
+                          class="lable1">
+                        <label for="test">Temps réel</label><br></input>
+                        <SELECT class="label2" style="margin-top: 0px;margin-bottom: 10px; width: 219px;" name="branche"  required>
+                          <option value="" disabled>Branche</option>
+                          {% for item in liste_branches %}
+                            <option value="{{item.0}}"> {{item.1}} </option>
+                          {% endfor %}
+                        </SELECT>
+                        <SELECT class="label3" style="margin-top: 0px;margin-bottom: 10px;" name="direction" required>
+                          <option value="" disabled>Direction</option>
+                          {% for item in liste_directions %}
+                            <option value="{{item.0}}"> {{item.1}} </option>
+                          {% endfor %}
+                        </SELECT>
+                        <input type="hidden" name="code_view" value="DT2A" required>
+                        <button type="submit" class="btn btn-block btn-success btn-xs"
+                          style="width: 100; margin-top: 9px; margin-top: 0px;">Soumettre</button>
+                      </form>
+
+                    </div><!-- /.tab-pane -->
+
+                  </div><!-- /.tab-content -->
+                </div><!-- nav-tabs-custom -->
+
+              </div><!-- /.box-body -->
+            </div><!-- /.box -->
+          </div><!-- /.col -->
+          <div class="col-md-4">
+            <!-- Primary box -->
+            <div class="box box-solid box-primary collapsed-box">
+              <div class="box-header">
+                <h3 class="box-title">SINISTRES </h3>
+                <div class="box-tools pull-right">
+                  <button class="btn btn-primary btn-sm" data-widget="collapse"><i class="fa fa-plus"></i></button>
+
+                </div>
+              </div>
+              <div class="box-body" style="display: none;height: 200px;">
+                <div class="nav-tabs-custom">
+                  <ul class="nav nav-tabs">
+                    <li class="active"><a href="#tab_1_sin" data-toggle="tab">PAR BILAN</a></li>
+                    <li><a href="#tab_2_sin" data-toggle="tab">PAR DATES</a></li>
+
+
+                    <li class="pull-right"><a href="#" class="text-muted"><i class="fa fa-gear"></i></a></li>
+                  </ul>
+                  <div class="tab-content">
+                    <div class="tab-pane active" id="tab_1_sin">
+
+                      <form action="{% url 'cet:excel'  %}" method="get" style="margin-bottom: 0px;">
+                        <SELECT id="annee" name="annee" style="margin-bottom: 10px;" required>
+                          <option value="" disabled selected>Année</option>
+                          {% for item in list_cet %}
+                          <option value="{{item.0}}"> {{item.0}} </option>
+                          {% endfor %}
+                        </SELECT>
+                        <SELECT name="trim" name="trim" style="margin-bottom: 10px;" required>
+                          <option value="" disabled selected>Période</option>
+
+                        </SELECT>
+                        <SELECT class="label2" style="margin-top: 0px;margin-bottom: 10px; width: 219px;" name="branche"  required>
+                          <option value="" disabled>Branche</option>
+                          {% for item in liste_branches %}
+                            <option value="{{item.0}}"> {{item.1}} </option>
+                          {% endfor %}
+                        </SELECT>
+                        <SELECT class="label3" style="margin-top: 0px;margin-bottom: 10px;" name="direction" required>
+                          <option value="" disabled>Direction</option>
+                          {% for item in liste_directions %}
+                            <option value="{{item.0}}"> {{item.1}} </option>
+                          {% endfor %}
+                        </SELECT>
+                        <input type="hidden" name="code_view" value="001S" required>
+                        <button type="submit" class="btn btn-block btn-success btn-xs"
+                          style="width: 100;">Soumettre</button>
+                      </form>
+
+
+                    </div><!-- /.tab-pane -->
+                    <div class="tab-pane" id="tab_2_sin">
+
+                      <form action="{% url 'cet:excel'  %}" method="get" style="margin-bottom: 0px;">
+                        <ppp>Du</ppp>
+                        <input type="date" name="date_debut" value="{{date_debut}}"
+                          style="pointer-events: none; height: 19px; vertical-align: middle; padding-top: 0px;padding-bottom: 0px;line-height: normal;">
+                          <ppp>au</ppp>
+                        <input type="date" name="date_fin" required
+                          style="height: 19px; vertical-align: middle ;padding-top: 0px;padding-bottom: 0px;line-height: normal;">
+                        <input type="checkbox" name="tr" id="test" style="vertical-align: middle; margin-top: 0px;"
+                          class="lable1">
+                        <label for="test">Temps réel</label><br></input>
+                        <SELECT class="label2" style="margin-top: 0px;margin-bottom: 10px; width: 219px;" name="branche"  required>
+                          <option value="" disabled>Branche</option>
+                          {% for item in liste_branches %}
+                            <option value="{{item.0}}"> {{item.1}} </option>
+                          {% endfor %}
+                        </SELECT>
+                        <SELECT class="label3" style="margin-top: 0px;margin-bottom: 10px;" name="direction" required>
+                          <option value="" disabled>Direction</option>
+                          {% for item in liste_directions %}
+                            <option value="{{item.0}}"> {{item.1}} </option>
+                          {% endfor %}
+                        </SELECT>
+                        <input type="hidden" name="code_view" value="DT1S" required>
+                        <button type="submit" class="btn btn-block btn-success btn-xs"
+                          style="width: 100; margin-top: 0px;">Soumettre</button>
+                      </form>
+
+                    </div><!-- /.tab-pane -->
+
+                  </div><!-- /.tab-content -->
+                </div><!-- nav-tabs-custom -->
+
+              </div><!-- /.box-body -->
+            </div><!-- /.box -->
+          </div><!-- /.col -->
+
+
+
+
+        </div>
+        <div class="row">
+
+
+
+          <div class="col-md-4">
+            <!-- Primary box -->
+            <div class="box box-solid box-primary collapsed-box">
+              <div class="box-header">
+                <h3 class="box-title">REC </h3>
+                <div class="box-tools pull-right">
+                  <button class="btn btn-primary btn-sm" data-widget="collapse"><i class="fa fa-plus"></i></button>
+
+                </div>
+              </div>
+              <div class="box-body" style="display: none;height: 200px;">
+                <div class="nav-tabs-custom">
+                  <ul class="nav nav-tabs">
+                    <li class="active"><a href="#tab_1_rec_acc" data-toggle="tab">PAR BILAN</a></li>
+                    <li><a href="#tab_2_rec_acc" data-toggle="tab">PAR DATES</a></li>
+
+
+                    <li class="pull-right"><a href="#" class="text-muted"><i class="fa fa-gear"></i></a></li>
+                  </ul>
+                  <div class="tab-content">
+                    <div class="tab-pane active" id="tab_1_rec_acc">
+
+                      <form action="{% url 'cet:excel'  %}" method="get" style="margin-bottom: 0px;">
+                        <SELECT id="annee" name="annee" style="margin-bottom: 10px;" required>
+                          <option value="" disabled selected>Année</option>
+                          {% for item in list_cet %}
+                          <option value="{{item.0}}"> {{item.0}} </option>
+                          {% endfor %}
+                        </SELECT>
+                        <SELECT name="trim" style="margin-bottom: 10px;" required>
+                          <option id="trim" value="" disabled selected>Période</option>
+
+                        </SELECT>
+                        <SELECT class="label2" style="margin-top: 0px;margin-bottom: 10px; width: 219px;" name="branche"  required>
+                          <option value="" disabled>Branche</option>
+                          {% for item in liste_branches %}
+                            <option value="{{item.0}}"> {{item.1}} </option>
+                          {% endfor %}
+                        </SELECT>
+                        <SELECT class="label3" style="margin-top: 0px;margin-bottom: 10px;" name="direction" required>
+                          <option value="" disabled>Direction</option>
+                          {% for item in liste_directions %}
+                            <option value="{{item.0}}"> {{item.1}} </option>
+                          {% endfor %}
+                        </SELECT>
+                        <input type="hidden" name="code_view" value="00RA" required>
+                        <button type="submit" class="btn btn-block btn-success btn-xs"
+                          style="width: 100;">Soumettre</button>
+                      </form>
+
+
+                    </div><!-- /.tab-pane -->
+                    <div class="tab-pane" id="tab_2_rec_acc">
+                      <form action="{% url 'cet:excel'  %}" method="get" style="margin-bottom: 0px;">
+                        TEMPS REEL</br>
+                        <SELECT class="label2" style="margin-top: 0px;margin-bottom: 10px; width: 219px;" name="branche"  required>
+                          <option value="" disabled>Branche</option>
+                          {% for item in liste_branches %}
+                          <option value="{{item.0}}"> {{item.1}} </option>
+                        {% endfor %}
+                        </SELECT>
+                        <SELECT class="label3" style="margin-top: 0px;margin-bottom: 10px;" name="direction" required>
+                          <option value="" disabled>Direction</option>
+                          {% for item in liste_directions %}
+                            <option value="{{item.0}}"> {{item.1}} </option>
+                          {% endfor %}
+                        </SELECT>
+                        <input type="hidden" name="code_view" value="TRRA" required>
+                        <button type="submit" class="btn btn-block btn-success btn-xs"
+                          style="width: 100; margin-top: 9px;">Soumettre</button>
+                      </form>
+
+                    </div><!-- /.tab-pane -->
+
+                  </div><!-- /.tab-content -->
+                </div><!-- nav-tabs-custom -->
+
+              </div><!-- /.box-body -->
+            </div><!-- /.box -->
+          </div><!-- /.col -->
+
+
+          <div class="col-md-4">
+            <!-- Primary box -->
+            <div class="box box-solid box-primary collapsed-box">
+              <div class="box-header">
+                <h3 class="box-title">SAP </h3>
+                <div class="box-tools pull-right">
+                  <button class="btn btn-primary btn-sm" data-widget="collapse"><i class="fa fa-plus"></i></button>
+
+                </div>
+              </div>
+              <div class="box-body" style="display: none;height: 200px;">
+                <div class="nav-tabs-custom">
+                  <ul class="nav nav-tabs">
+                    <li class="active"><a href="#tab_1_sap" data-toggle="tab">PAR BILAN</a></li>
+                    <li><a href="#tab_2_sap" data-toggle="tab">PAR DATES</a></li>
+
+
+                    <li class="pull-right"><a href="#" class="text-muted"><i class="fa fa-gear"></i></a></li>
+                  </ul>
+                  <div class="tab-content">
+                    <div class="tab-pane active" id="tab_1_sap">
+
+                      <form action="{% url 'cet:excel'  %}" method="get" style="margin-bottom: 0px;">
+                        <SELECT id="annee" name="annee" style="margin-bottom: 10px;" required>
+                          <option value="" disabled selected>Année</option>
+                          {% for item in list_cet %}
+                          <option value="{{item.0}}"> {{item.0}} </option>
+                          {% endfor %}
+                        </SELECT>
+                        <SELECT id="trim" name="trim" style="margin-bottom: 10px;" required>
+                          <option value="" disabled selected>Période</option>
+
+                        </SELECT>
+                        <SELECT class="label2" style="margin-top: 0px;margin-bottom: 10px; width: 219px;" name="branche"  required>
+                          <option value="" disabled>Branche</option>
+                          {% for item in liste_branches %}
+                            <option value="{{item.0}}"> {{item.1}} </option>
+                          {% endfor %}
+                        </SELECT>
+                        <SELECT class="label3" style="margin-top: 0px;margin-bottom: 10px;" name="direction" required>
+                          <option value="" disabled>Direction</option>
+                          {% for item in liste_directions %}
+                            <option value="{{item.0}}"> {{item.1}} </option>
+                          {% endfor %}
+                        </SELECT>
+                        <input type="hidden" name="code_view" value="00SA" required>
+                        <button type="submit" class="btn btn-block btn-success btn-xs"
+                          style="width: 100;">Soumettre</button>
+                      </form>
+
+
+                    </div><!-- /.tab-pane -->
+                    <div class="tab-pane" id="tab_2_sap">
+
+                      <form action="{% url 'cet:excel'  %}" method="get" style="margin-bottom: 0px;">
+                        <ppp>Du</ppp>
+                        <input type="date" name="date_debut" value="{{date_debut}}"
+                          style="pointer-events: none; height: 19px; vertical-align: middle; padding-top: 0px;padding-bottom: 0px;line-height: normal;">
+                          <ppp>au</ppp>
+                        <input type="date" name="date_fin" required
+                          style="height: 19px; vertical-align: middle ;padding-top: 0px;padding-bottom: 0px;line-height: normal;">
+                        <input type="checkbox" name="tr" id="test" style="vertical-align: middle; margin-top: 0px;"
+                          class="lable1">
+                        <label for="test">Temps réel</label><br></input>
+                        <SELECT class="label2" style="margin-top: 0px;margin-bottom: 10px; width: 219px;" name="branche"  required>
+                          <option value="" disabled>Branche</option>
+                          {% for item in liste_branches %}
+                            <option value="{{item.0}}"> {{item.1}} </option>
+                          {% endfor %}
+                        </SELECT>
+                        <SELECT class="label3" style="margin-top: 0px;margin-bottom: 10px;" name="direction" required>
+                          <option value="" disabled>Direction</option>
+                          {% for item in liste_directions %}
+                            <option value="{{item.0}}"> {{item.1}} </option>
+                          {% endfor %}
+                        </SELECT>
+                        <input type="hidden" name="code_view" value="DTSA" required>
+                        <button type="submit" class="btn btn-block btn-success btn-xs"
+                          style="width: 100; margin-top: 0px;">Soumettre</button>
+                      </form>
+
+                    </div><!-- /.tab-pane -->
+
+                  </div><!-- /.tab-content -->
+                </div><!-- nav-tabs-custom -->
+
+              </div><!-- /.box-body -->
+            </div><!-- /.box -->
+          </div>
+
+
+        </div>
+
+        <div class="row">
+
+          <div class="col-md-4">
+
+          </div>
+
+          <div class="col-md-4">
+
+          </div>
+        </div><!-- /.col -->
+        <div class="row">
+          <div class="col-md-4">
+
+          </div>
+        </div><!-- ./box-body -->
+        <div class="box-footer">
+
+        </div><!-- /.box-footer -->
+      </div><!-- /.box -->
+    </div><!-- /.col -->
+  </div><!-- /.row -->
+
+  <div class="col-md-12">
+    <div class="box">
+      <div class="box-header with-border">
+        <h3 class="box-title">RETROCESSION</h3>
+
+      </div><!-- /.box-header -->
+      <div class="box-body">
+        <div class="row">
+          <div class="col-md-4">
+            <!-- Primary box -->
+            <div class="box box-solid box-primary collapsed-box">
+              <div class="box-header">
+                <h3 class="box-title">CET DETAIL </h3>
+                <div class="box-tools pull-right">
+                  <button class="btn btn-primary btn-sm" data-widget="collapse"><i class="fa fa-plus"></i></button>
+                </div>
+              </div>
+              <div class="box-body" style="display: none; height: 200px;">
+                <div class="nav-tabs-custom">
+                  <ul class="nav nav-tabs">
+                    <li class="active"><a href="#tab_1_RETRO" data-toggle="tab">PAR BILAN</a></li>
+                    <li><a href="#tab_2_RETRO" data-toggle="tab">PAR DATES</a></li>
+
+
+                    <li class="pull-right"><a href="#" class="text-muted"><i class="fa fa-gear"></i></a></li>
+                  </ul>
+                  <div class="tab-content">
+                    <div class="tab-pane active" id="tab_1_RETRO">
+
+                      <form action="{% url 'cet:excel'  %}" method="get" style="margin-bottom: 0px;">
+                        <SELECT id="annee" name="annee" style="margin-top: 0px;margin-bottom: 10px;" required>
+                          <option value="" disabled selected>Année</option>
+                          {% for item in list_cet %}
+                          <option value="{{item.0}}"> {{item.0}} </option>
+                          {% endfor %}
+                        </SELECT>
+                        <SELECT id="trim" name="trim" style="margin-top: 0px;margin-bottom: 10px;" required>
+                          <option value="" disabled selected>Période</option>
+
+                        </SELECT>
+                        <SELECT class="label2" style="margin-top: 0px;margin-bottom: 10px; width: 219px;" name="branche"  required>
+                          <option value="" disabled>Branche</option>
+                          {% for item in liste_branches %}
+                            <option value="{{item.0}}"> {{item.1}} </option>
+                          {% endfor %}
+                        </SELECT>
+                        <SELECT class="label3" style="margin-top: 0px;margin-bottom: 10px;" name="direction" required>
+                          <option value="" disabled>Direction</option>
+                          {% for item in liste_directions %}
+                            <option value="{{item.0}}"> {{item.1}} </option>
+                          {% endfor %}
+                        </SELECT>
+                        <input type="hidden" name="code_view" value="001R" required>
+                        <button type="submit" class="btn btn-block btn-success btn-xs"
+                          style="width: 100;">Soumettre</button>
+                      </form>
+
+
+                    </div><!-- /.tab-pane -->
+                    <div class="tab-pane" id="tab_2_RETRO">
+                      <p>TEMPS REEL</p>
+                      <form action="{% url 'cet:excel'  %}" method="get" style="margin-top: 0px; margin-bottom: 0px;">
+                        <SELECT class="label2" style="margin-top: 0px;margin-bottom: 10px; width: 219px;" name="branche"  required>
+                          {% for item in liste_branches %}
+                            <option value="{{item.0}}"> {{item.1}} </option>
+                          {% endfor %}
+                        </SELECT>
+                        <SELECT class="label3" style="margin-top: 0px;margin-bottom: 10px;" name="direction" required>
+                          <option value="" disabled>Direction</option>
+                          {% for item in liste_directions %}
+                            <option value="{{item.0}}"> {{item.1}} </option>
+                          {% endfor %}
+                        </SELECT>
+                        <input type="hidden" name="code_view" value="TR1R" required>
+                        <button type="submit" class="btn btn-block btn-success btn-xs"
+                          style="width: 100;">Soumettre</button>
+                      </form>
+
+                    </div><!-- /.tab-pane -->
+
+                  </div><!-- /.tab-content -->
+                </div><!-- nav-tabs-custom -->
+
+              </div><!-- /.box-body -->
+            </div><!-- /.box -->
+          </div><!-- /.col -->
+          <div class="col-md-4">
+            <!-- Primary box -->
+            <div class="box box-solid box-primary collapsed-box">
+              <div class="box-header">
+                <h3 class="box-title">PRIMES </h3>
+                <div class="box-tools pull-right">
+                  <button class="btn btn-primary btn-sm" data-widget="collapse"><i class="fa fa-plus"></i></button>
+
+                </div>
+              </div>
+              <div class="box-body" style="display: none;height: 200px;">
+                <div class="nav-tabs-custom">
+                  <ul class="nav nav-tabs">
+                    <li class="active"><a href="#tab_1_prim_retro" data-toggle="tab">PAR BILAN</a></li>
+                    <li><a href="#tab_2_prim_retro" data-toggle="tab">PAR DATES</a></li>
+
+
+                    <li class="pull-right"><a href="#" class="text-muted"><i class="fa fa-gear"></i></a></li>
+                  </ul>
+                  <div class="tab-content">
+                    <div class="tab-pane active" id="tab_1_prim_retro">
+
+                      <form action="{% url 'cet:excel'  %}" method="get" style="margin-bottom: 0px;">
+                        <SELECT id="annee" name="annee" style="margin-bottom: 10px;" required>
+                          <option value="" disabled selected>Année</option>
+                          {% for item in list_cet %}
+                          <option value="{{item.0}}"> {{item.0}} </option>
+                          {% endfor %}
+                        </SELECT>
+                        <SELECT id="trim" name="trim" style="margin-bottom: 10px;" required>
+                          <option value="" disabled selected>Période</option>
+
+                        </SELECT>
+                        <SELECT class="label2" style="margin-top: 0px;margin-bottom: 10px; width: 219px;" name="branche"  required>
+                          <option value="" disabled>Branche</option>
+                          {% for item in liste_branches %}
+                            <option value="{{item.0}}"> {{item.1}} </option>
+                          {% endfor %}
+                        </SELECT>
+                        <SELECT class="label3" style="margin-top: 0px;margin-bottom: 10px;" name="direction" required>
+                          <option value="" disabled>Direction</option>
+                          {% for item in liste_directions %}
+                            <option value="{{item.0}}"> {{item.1}} </option>
+                          {% endfor %}
+                        </SELECT>
+                        <input type="hidden" name="code_view" value="003R" required>
+                        <button type="submit" class="btn btn-block btn-success btn-xs"
+                          style="width: 100;">Soumettre</button>
+                      </form>
+
+
+                    </div><!-- /.tab-pane -->
+                    <div class="tab-pane" id="tab_2_prim_retro">
+
+                      <form action="{% url 'cet:excel'  %}" method="get" style="margin-bottom: 0px;">
+                        <ppp>Du</ppp>
+                        <input type="date" name="date_debut" value="{{date_debut}}"
+                          style="pointer-events: none; height: 19px; vertical-align: middle; padding-top: 0px;padding-bottom: 0px;line-height: normal;">
+                          <ppp>au</ppp>
+                        <input type="date" name="date_fin" required
+                          style="height: 19px; vertical-align: middle ;padding-top: 0px;padding-bottom: 0px;line-height: normal;">
+                        <input type="checkbox" name="tr" id="test" style="vertical-align: middle; margin-top: 0px;"
+                          class="lable1">
+                        <label for="test">Temps réel</label><br></input>
+                        <SELECT class="label2" style="margin-top: 0px;margin-bottom: 10px; width: 219px;" name="branche"  required>
+                          <option value="" disabled>Branche</option>
+                          {% for item in liste_branches %}
+                            <option value="{{item.0}}"> {{item.1}} </option>
+                          {% endfor %}
+                        </SELECT>
+                        <SELECT class="label3" style="margin-top: 0px;margin-bottom: 10px;" name="direction" required>
+                          <option value="" disabled>Direction</option>
+                          {% for item in liste_directions %}
+                            <option value="{{item.0}}"> {{item.1}} </option>
+                          {% endfor %}
+                        </SELECT>
+                        <input type="hidden" name="code_view" value="DT3R" required>
+                        <button type="submit" class="btn btn-block btn-success btn-xs"
+                          style="width: 100; margin-top: 0px;">Soumettre</button>
+                      </form>
+
+                    </div><!-- /.tab-pane -->
+
+                  </div><!-- /.tab-content -->
+                </div><!-- nav-tabs-custom -->
+
+              </div><!-- /.box-body -->
+            </div><!-- /.box -->
+          </div>
+
+          <div class="col-md-4">
+            <!-- Primary box -->
+            <div class="box box-solid box-primary collapsed-box">
+              <div class="box-header">
+                <h3 class="box-title">SINISTRES </h3>
+                <div class="box-tools pull-right">
+                  <button class="btn btn-primary btn-sm" data-widget="collapse"><i class="fa fa-plus"></i></button>
+
+                </div>
+              </div>
+              <div class="box-body" style="display: none;height: 200px;">
+                <div class="nav-tabs-custom">
+                  <ul class="nav nav-tabs">
+                    <li class="active"><a href="#tab_1_sin_retro" data-toggle="tab">PAR BILAN</a></li>
+                    <li><a href="#tab_2_sin_retro" data-toggle="tab">PAR DATES</a></li>
+
+
+                    <li class="pull-right"><a href="#" class="text-muted"><i class="fa fa-gear"></i></a></li>
+                  </ul>
+                  <div class="tab-content">
+                    <div class="tab-pane active" id="tab_1_sin_retro">
+
+                      <form action="{% url 'cet:excel' %}" method="get" style="margin-bottom: 0px;">
+                        <SELECT id="annee" name="annee" style="margin-bottom: 10px;" required>
+                          <option value="" disabled selected>Année</option>
+                          {% for item in list_cet %}
+                          <option value="{{item.0}}"> {{item.0}} </option>
+                          {% endfor %}
+                        </SELECT>
+                        <SELECT id="trim" name="trim" style="margin-bottom: 10px;" required>
+                          <option value="" disabled selected>Période</option>
+
+                        </SELECT>
+                        <SELECT class="label2" style="margin-top: 0px;margin-bottom: 10px; width: 219px;" name="branche"  required>
+                          <option value="" disabled>Branche</option>
+                          {% for item in liste_branches %}
+                            <option value="{{item.0}}"> {{item.1}} </option>
+                          {% endfor %}
+                        </SELECT>
+                        <SELECT class="label3" style="margin-top: 0px;margin-bottom: 10px;" name="direction" required>
+                          <option value="" disabled>Direction</option>
+                          {% for item in liste_directions %}
+                            <option value="{{item.0}}"> {{item.1}} </option>
+                          {% endfor %}
+                        </SELECT>
+                        <input type="hidden" name="code_view" value="002R" required>
+                        <button type="submit" class="btn btn-block btn-success btn-xs"
+                          style="width: 100;">Soumettre</button>
+                      </form>
+
+
+                    </div><!-- /.tab-pane -->
+                    <div class="tab-pane" id="tab_2_sin_retro">
+
+                      <form action="{% url 'cet:excel'  %}" method="get" style="margin-bottom: 0px;">
+                        <ppp>Du</ppp>
+                        <input type="date" name="date_debut" value="{{date_debut}}"
+                          style="pointer-events: none; height: 19px; vertical-align: middle; padding-top: 0px;padding-bottom: 0px;line-height: normal;">
+                          <ppp>au</ppp>
+                        <input type="date" name="date_fin" required
+                          style="height: 19px; vertical-align: middle ;padding-top: 0px;padding-bottom: 0px;line-height: normal;">
+                        <input type="checkbox" name="tr" id="test" style="vertical-align: middle; margin-top: 0px;"
+                          class="lable1">
+                        <label for="test">Temps réel</label><br></input>
+                        <input type="hidden" name="code_view" value="DT2R" required>
+                        <SELECT class="label2" style="margin-top: 0px;margin-bottom: 10px; width: 219px;" name="branche"  required>
+                          <option value="" disabled>Branche</option>
+                          {% for item in liste_branches %}
+                            <option value="{{item.0}}"> {{item.1}} </option>
+                          {% endfor %}
+                        </SELECT>
+                        <SELECT class="label3" style="margin-top: 0px;margin-bottom: 10px;" name="direction" required>
+                          <option value="" disabled>Direction</option>
+                          {% for item in liste_directions %}
+                            <option value="{{item.0}}"> {{item.1}} </option>
+                          {% endfor %}
+                        </SELECT>
+                        <button type="submit" class="btn btn-block btn-success btn-xs"
+                          style="width: 100; margin-top: 0px;">Soumettre</button>
+                      </form>
+
+                    </div><!-- /.tab-pane -->
+
+                  </div><!-- /.tab-content -->
+                </div><!-- nav-tabs-custom -->
+
+              </div><!-- /.box-body -->
+            </div><!-- /.box -->
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4">
+            <!-- Primary box -->
+            <div class="box box-solid box-primary collapsed-box">
+              <div class="box-header">
+                <h3 class="box-title">REC </h3>
+                <div class="box-tools pull-right">
+                  <button class="btn btn-primary btn-sm" data-widget="collapse"><i class="fa fa-plus"></i></button>
+
+                </div>
+              </div>
+              <div class="box-body" style="display: none;height: 200px;">
+                <div class="nav-tabs-custom">
+                  <ul class="nav nav-tabs">
+                    <li class="active"><a href="#tab_1_rec_retro" data-toggle="tab">PAR BILAN</a></li>
+                    <li><a href="#tab_2_rec_retro" data-toggle="tab">PAR DATES</a></li>
+
+
+                    <li class="pull-right"><a href="#" class="text-muted"><i class="fa fa-gear"></i></a></li>
+                  </ul>
+                  <div class="tab-content">
+                    <div class="tab-pane active" id="tab_1_rec_retro">
+
+                      <form action="{% url 'cet:excel'  %}" method="get" style="margin-bottom: 0px;">
+                        <SELECT id="annee" name="annee" style="margin-bottom: 10px;" required>
+                          <option value="" disabled selected>Année</option>
+                          {% for item in list_cet %}
+                          <option value="{{item.0}}"> {{item.0}} </option>
+                          {% endfor %}
+                        </SELECT>
+                        <SELECT id="trim" name="trim" style="margin-bottom: 10px;" required>
+                          <option value="" disabled selected>Période</option>
+                        </SELECT>
+                        <SELECT class="label2" style="margin-top: 0px;margin-bottom: 10px; width: 219px;" name="branche"  required>
+                          <option value="" disabled>Branche</option>
+                          {% for item in liste_branches %}
+                            <option value="{{item.0}}"> {{item.1}} </option>
+                          {% endfor %}
+                        </SELECT>
+                        <SELECT class="label3" style="margin-top: 0px;margin-bottom: 10px;" name="direction" required>
+                          <option value="" disabled>Direction</option>
+                          {% for item in liste_directions %}
+                            <option value="{{item.0}}"> {{item.1}} </option>
+                          {% endfor %}
+                        </SELECT>
+                        <input type="hidden" name="code_view" value="00RR" required>
+                        <button type="submit" class="btn btn-block btn-success btn-xs"
+                          style="width: 100;">Soumettre</button>
+                      </form>
+
+
+                    </div><!-- /.tab-pane -->
+                    <div class="tab-pane" id="tab_2_rec_retro">
+
+                      <form action="{% url 'cet:excel'  %}" method="get" style="margin-bottom: 0px;">
+                        TEMPS REEL</br>
+                        <input type="hidden" name="code_view" value="TRRR" required>
+                        <SELECT class="label2" style="margin-top: 0px;margin-bottom: 10px; width: 219px;" name="branche"  required>
+                          <option value="" disabled>Branche</option>
+                          {% for item in liste_branches %}
+                            <option value="{{item.0}}"> {{item.1}} </option>
+                          {% endfor %}
+                        </SELECT>
+                        <SELECT class="label3" style="margin-top: 0px;margin-bottom: 10px;" name="direction" required>
+                          <option value="" disabled>Direction</option>
+                          {% for item in liste_directions %}
+                            <option value="{{item.0}}"> {{item.1}} </option>
+                          {% endfor %}
+                        </SELECT>
+                        <button type="submit" class="btn btn-block btn-success btn-xs"
+                          style="width: 100; margin-top: 0px;">Soumettre</button>
+                      </form>
+
+                    </div><!-- /.tab-pane -->
+
+                  </div><!-- /.tab-content -->
+                </div><!-- nav-tabs-custom -->
+
+              </div><!-- /.box-body -->
+            </div><!-- /.box -->
+          </div><!-- /.col -->
+
+
+
+          <div class="col-md-4">
+            <!-- Primary box -->
+            <div class="box box-solid box-primary collapsed-box">
+              <div class="box-header">
+                <h3 class="box-title">SAP </h3>
+                <div class="box-tools pull-right">
+                  <button class="btn btn-primary btn-sm" data-widget="collapse"><i class="fa fa-plus"></i></button>
+
+                </div>
+              </div>
+              <div class="box-body" style="display: none;height: 200px;">
+                <div class="nav-tabs-custom">
+                  <ul class="nav nav-tabs">
+                    <li class="active"><a href="#tab_1_sap_retro" data-toggle="tab">PAR BILAN</a></li>
+                    <li><a href="#tab_2_sap_retro" data-toggle="tab">PAR DATES</a></li>
+
+
+                    <li class="pull-right"><a href="#" class="text-muted"><i class="fa fa-gear"></i></a></li>
+                  </ul>
+                  <div class="tab-content">
+                    <div class="tab-pane active" id="tab_1_sap_retro">
+
+                      <form action="{% url 'cet:excel'  %}" method="get" style="margin-bottom: 0px;">
+                        <SELECT id="annee" name="annee" style="margin-bottom: 10px;" required>
+                          <option value="" disabled selected>Année</option>
+                          {% for item in list_cet %}
+                          <option value="{{item.0}}"> {{item.0}} </option>
+                          {% endfor %}
+                        </SELECT>
+                        <SELECT id="trim" name="trim" style="margin-bottom: 10px;" required>
+                          <option value="" disabled selected>Période</option>
+
+                        </SELECT>
+                        
+                        <SELECT class="label2" style="margin-top: 0px;margin-bottom: 10px; width: 219px;" name="branche"  required>
+                          <option value="" disabled>Branche</option>
+                          {% for item in liste_branches %}
+                            <option value="{{item.0}}"> {{item.1}} </option>
+                          {% endfor %}
+                        </SELECT>
+                        <SELECT class="label3" style="margin-top: 0px;margin-bottom: 10px;" name="direction" required>
+                          <option value="" disabled>Direction</option>
+                          {% for item in liste_directions %}
+                            <option value="{{item.0}}"> {{item.1}} </option>
+                          {% endfor %}
+                        </SELECT>
+                        <input type="hidden" name="code_view" value="00SR" required>
+                        <button type="submit" class="btn btn-block btn-success btn-xs"
+                          style="width: 100;">Soumettre</button>
+                      </form>
+
+
+                    </div><!-- /.tab-pane -->
+                    <div class="tab-pane" id="tab_2_sap_retro">
+
+                      <form action="{% url 'cet:excel'  %}" method="get" style="margin-bottom: 0px;">
+                        <ppp>Du</ppp>
+                        <input type="date" name="date_debut" value="{{date_debut}}"
+                          style="pointer-events: none; height: 19px; vertical-align: middle; padding-top: 0px;padding-bottom: 0px;line-height: normal;">
+                          <ppp>au</ppp>
+                        <input type="date" name="date_fin" required
+                          style="height: 19px; vertical-align: middle ;padding-top: 0px;padding-bottom: 0px;line-height: normal;">
+                        <input type="checkbox" name="tr" id="test" style="vertical-align: middle; margin-top: 0px;"
+                          class="lable1">
+                        <label for="test">Temps réel</label><br></input>
+                        <SELECT class="label2" style="margin-top: 0px;margin-bottom: 10px; width: 219px;" name="branche"  required>
+                          <option value="" disabled>Branche</option>
+                          {% for item in liste_branches %}
+                            <option value="{{item.0}}"> {{item.1}} </option>
+                          {% endfor %}
+                        </SELECT>
+                        <SELECT class="label3" style="margin-top: 0px;margin-bottom: 10px;" name="direction" required>
+                          <option value="" disabled>Direction</option>
+                          {% for item in liste_directions %}
+                            <option value="{{item.0}}"> {{item.1}} </option>
+                          {% endfor %}
+                        </SELECT>
+                        <input type="hidden" name="code_view" value="DTSR" required>
+                        <button type="submit" class="btn btn-block btn-success btn-xs"
+                          style="width: 100; margin-top: 0px;">Soumettre</button>
+                      </form>
+
+                    </div><!-- /.tab-pane -->
+
+
+                  </div><!-- /.tab-content -->
+                </div><!-- nav-tabs-custom -->
+
+              </div><!-- /.box-body -->
+            </div><!-- /.box -->
+          </div>
+
+        </div>
+      </div><!-- ./box-body -->
+      
+    </div><!-- /.box -->
+  </div><!-- /.col -->
+
+
+  <div class="row">
+    <div class="col-md-10" style="margin-left: 15px;">
+
+    </div>
+  </div>
+  <div class="modal"></div>
+  <script>
+    document.querySelectorAll('.label2').forEach(item => {
+      item.value = '?';
+    })
+    document.querySelectorAll('.label3').forEach(item => {
+      item.value = '?';
+    })
+
+
+    document.querySelectorAll('.lable1').forEach(item => {
+      item.addEventListener('click', event => {
+        if (item.checked == true) {
+          var prev = item.previousElementSibling;
+          var prev2 = prev.previousElementSibling;
+          var prev3 = prev2.previousElementSibling;
+          var prev4 = prev3.previousElementSibling;
+          
+          prev.required = false;
+          prev.style.display  = "none"; 
+          prev2.style.display = "none"; 
+          prev3.style.display = "none"; 
+          prev4.style.display = "none";
+          
+        }
+        else {
+          var prev  = item.previousElementSibling;
+          var prev2 = prev.previousElementSibling;
+          var prev3 = prev2.previousElementSibling;
+          var prev4 = prev3.previousElementSibling;
+          
+          prev.required = true;
+          prev.style.display = "initial";
+          prev2.style.display = "initial";
+          prev3.style.display = "initial";
+          prev4.style.display = "initial"; 
+        }
+      })
+    })
+  </script>
+      <!-- jQuery 2.1.3 -->
+      <script src=" {% static 'cet/plugins/jQuery/jQuery-2.1.3.min.js' %} "></script>
+      <script>
+        var data = JSON.parse("{{data|escapejs}}");
+    
+    
+        document.querySelectorAll('#annee').forEach(item => {
+          item.addEventListener('change', event => {
+            var suiv = item.nextElementSibling;
+            //DELETE THE OPTIONS 
+            var length = suiv.options.length;
+            for (i = length-1; i >= 0; i--) {
+            suiv.options[i] = null;
+            }
+    
+            // GET THE VALUE SELECTED BY THE USER 
+            var annee = item.options[item.selectedIndex].value ;
+            /*
+            * FIND THE SEMESTERS OF THE SELECTED YEAR 
+            */
+            var j = 0 ;
+            var i =0 ;
+            var stop = false ;
+            while ( ( i < data["liste_cet"].length ) && !(stop) ) 
+            {
+            if (  ( data["liste_cet"][i][0] == annee  )  )
+                {
+                    j= i ;
+                    stop =  true ;
+                    if ( data["liste_cet"][i][1] != 0  )
+                    {
+                        //console.log("le premier trimestre existe");
+                        var opt = document.createElement('option');
+                        opt.value = '1ER TRIMESTRE';
+                        opt.innerHTML = '1ER TRIMESTRE';
+                        suiv.appendChild(opt);
+                    }
+                    if ( data["liste_cet"][i][2] != 0  )
+                    {
+                        //console.log("le premier semestre existe");
+                        var opt = document.createElement('option');
+                        opt.value = '1ER SEMESTRE';
+                        opt.innerHTML = '1ER SEMESTRE';
+                        suiv.appendChild(opt);
+                    }
+                    if ( data["liste_cet"][i][3] != 0  )
+                    {
+                        //console.log("le 3eme semestre existe");
+                        var opt = document.createElement('option');
+                        opt.value = '3EME TRIMESTRE';
+                        opt.innerHTML = '3EME TRIMESTRE';
+                        suiv.appendChild(opt);
+                    }
+                    if ( data["liste_cet"][i][4] != 0  )
+                    {
+                        //console.log("le 2eme semestre existe");
+                        var opt = document.createElement('option');
+                        opt.value = '2EME SEMESTRE';
+                        opt.innerHTML = '2EME SEMESTRE';
+                        suiv.appendChild(opt);
+                    }
+                }  
+            i =i +1 ;
+            }
+          })
+        })
+      </script>
+
+  {% endblock %}
+  {% block highlight_etatsexcel %}
+  class="active"
+  {% endblock %}
+  {% block CET_treeview %}
+  active
+  {% endblock %}
+  {% block CET_menu_open %}
+  menu-open
+  {% endblock %}
+  {% block CET_menu_style %}
+  style="display: block;"
+  {% endblock %}

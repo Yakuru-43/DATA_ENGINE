@@ -1,0 +1,96 @@
+{% extends 'main/templates/index.html' %}
+{% load static %}
+{% block header %}
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+  <h1>
+    Provisons d'égalisation et d'équilibrage.
+    <small> </small>
+  </h1>
+
+</section>
+
+{% endblock %}
+
+{% block meta %}
+
+
+<style>
+    label {
+    text-align: right;
+    clear: both;
+    float:left;
+    margin-right:15px;
+}
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+</style>
+
+
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+          <div class="col-sm-2">
+          </div>
+          <div class="col-md-7">
+            <div class="box box-solid">
+              <div class="box-header with-border">
+              
+                <h3 class="box-title">Veuillez introduire les taux :</h3>
+              </div><!-- /.box-header -->
+              <div class="box-body"> 
+                <form action="{% url 'cet:save_taux_egal_equi' %}" method="get">
+                <table>
+                    <tr >
+                        <td style="padding-right: 10px; padding-bottom: 10px ;"><label style="margin-top: 5px;" for="input_vie">Taux Vie</label></td>
+                        <td style="padding-right: 10px; padding-bottom: 10px ;"><input type="number" id="input_vie" name="taux_vie" placeholder="Taux Vie" step=".01" required  value="{{taux_vie}}"></td>
+                    </tr>
+                    <tr>
+                        <td style="padding-right: 10px; padding-bottom: 10px ;"><label style="margin-top: 5px;" for="input_grele">Taux Credit</label></td>
+                        <td style="padding-right: 10px; padding-bottom: 10px ;"><input type="number" id="input_Credit" name="taux_credit" placeholder="Taux Credit" step=".01" required value="{{taux_credit}}"></td>
+                    </tr>
+                    <tr >
+                        <td style="padding-right: 10px; padding-bottom: 10px ;"><label style="margin-top: 5px;" for="input_grele">Taux Grêle</label></td>
+                        <td style="padding-right: 10px; padding-bottom: 10px ;"><input type="number" id="input_grele" name="taux_grele" placeholder="Taux Grêle" step=".01" required value="{{taux_grele}}"></td>
+                    </tr>
+                </table>
+                <button class="btn btn-block btn-success btn-xs" style="width:100px"> Sauvegarder</button> 
+            </form>
+              </div><!-- /.box-body -->
+            </div><!-- /.box -->
+          </div><!-- ./col -->
+                      
+          <div class="col-sm-4">
+          </div>
+        </div>
+    </div>
+    <div class="container" >
+        <form action="{% url 'cet:apercu_prov_egal_equi' %}" method="get">
+            <button class="btn btn-block btn-success btn-xs" style="width:auto"> Aperçus CET avec Prov. egal-equi</button> 
+        </form>
+    </div>
+        
+{% endblock %}
+
+{% block highlight_egal_equi %} class="active" {% endblock %}
+{% block CET_treeview %}
+  active
+  {% endblock %}
+  {% block CET_menu_open %}
+  menu-open
+  {% endblock %}
+  {% block CET_menu_style %}
+  style="display: block;"
+  {% endblock %}

@@ -1,0 +1,151 @@
+{% extends 'main/templates/index.html' %}
+{% load static %}
+{% block header %}
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+  <h1>
+    MANAGEMENT
+    <small> </small>
+  </h1>
+
+</section>
+
+{% endblock %}
+{% block meta %}
+<!--===============================================================================================-->
+<link rel="stylesheet" type="text/css" href=" {% static 'cet/table_template/vendor/animate/animate.css' %} " >
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href=" {% static 'cet/table_template/vendor/select2/select2.min.css' %} " >
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href=" {% static 'cet/table_template/vendor/perfect-scrollbar/perfect-scrollbar.css' %} " >
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href=" {% static 'cet/table_template/css/util.css' %} "  >
+	<link rel="stylesheet" type="text/css" href=" {% static 'cet/table_template/css/main.css' %} " >
+<!--===============================================================================================-->
+{% endblock %}
+{% block content %}
+    <div class="container">
+        <div class="row">
+          <div class="col-sm-2">
+          </div>
+          <div class="col-md-7">
+            <div class="box box-solid">
+              <div class="box-header with-border">
+              
+                <h3 class="box-title">Etat du système RMS</h3>
+              </div><!-- /.box-header -->
+              <div class="box-body">
+                <p>{{ message }} </p>
+                <table>
+                  <tr>
+                    {% if active == 1  %}
+                      <td> <!-- {% url 'cet:bloquer_rms' %} -->
+                        <form action="{% url 'cet:bloquer_rms' %}" method="get" style="margin-bottom: 0px;">
+                          <button class="btn btn-block btn-success btn-xs" style="width:100px" id="btn_bloquer" att="{% url 'cet:bloquer_rms' %}"> BLOQUER</button> 
+                        </form>
+                      </td> 
+                    {% endif %}
+                    {% if active == 0  %}
+                      <td> <!-- {% url 'cet:debloquer_rms' %} -->
+                        <form action="{% url 'cet:debloquer_rms' %}" method="get" style="margin-bottom: 0px;">
+                          <button class="btn btn-block btn-success btn-xs" style="width:100px" id="btn_debloquer" att="{% url 'cet:debloquer_rms' %}"> DEBLOQUER</button> 
+                        </form>
+                      </td> 
+                    {% endif %}
+                  </tr>
+                </table>
+                
+              </div><!-- /.box-body -->
+            </div><!-- /.box -->
+          </div><!-- ./col -->
+                      
+          <div class="col-sm-4">
+          </div>
+        </div>
+        {% if active == 0  %}
+        <div class="row">
+          
+          <div class="col-sm-12">
+            <div class="box box-solid">
+              <div class="box-header with-border">
+              
+                <h3 class="box-title">Liste des utilisateurs RMS</h3>
+              </div><!-- /.box-header -->
+              <div class="box-body">
+                <div class="container-table110" >
+                  <div class="wrap-table110">
+                      <div class="table100 ver1 m-b-110 " style="padding-top: 0px;;margin-bottom: 0px;">
+                          <div>
+                              <table class="table100-body" >
+                                  <thead>
+                                      <tr class="row100 head" >
+                                          <th  style="padding-left:30px ;  height: 50px;" > UTILISATEUR</th>
+                                          <th>DEPARTEMENT</th>
+                                          <th  >STATUS</th>
+                                          <th style="text-align: center" >ACTION</th>
+      
+                                      </tr>
+                                  </thead>
+                                  <tbody>
+                                    {% for ligne in liste_user  %}
+                                      <tr>
+                                        <!--<td>{{ ligne.0 }}</td>-->
+                                        <td style="padding-left:30px;padding-top: 5px;  padding-bottom: 5px;">{{ ligne.1 }}</td>
+                                        <td  style="padding-top: 5px;  padding-bottom: 5px;">{{ ligne.3 }} </td>
+                                        <td  style="padding-top: 5px;  padding-bottom: 5px;">
+                                            {% if ligne.2 == "ENQUIRY" %} 
+                                                <P class="btn btn-block btn-danger btn-xs " style="width:100px ; pointer-events: none;">ENQUIRY ONLY</P>
+                                            {% else %}
+                                            <P class="btn btn-block btn-success btn-xs " style="width:100px ; pointer-events: none;">INPUT MODE</P>
+                                            {% endif %}
+                                        </td>
+                                        <td style="text-align: center ;padding-top: 5px;  padding-bottom: 5px; " >
+                                          {% if ligne.2 == "ENQUIRY" %} 
+                                            <form action="{% url 'cet:debloquer_user' %}" method="get" style="margin-bottom: 0px; ">
+                                              <input type="hidden" value="{{ ligne.0 }}" name="user_id">
+                                              <div style=" display: flex; justify-content: center;">
+                                                 <button class="btn btn-block btn-info btn-xs "style="width:100px;"> DEBLOQUER</button> 
+                                              </div>
+                                            </form>
+                                          {% else %}
+                                            <form action="{% url 'cet:bloquer_user' %}" method="get" style="margin-bottom: 0px;">
+                                              <input type="hidden" value="{{ ligne.0 }}" name="user_id">
+                                              <div style=" display: flex; justify-content: center;">
+                                                <button class="btn btn-block btn-info btn-xs" style="width:100px; "> BLOQUER</button> 
+                                              </div>
+                                            </form>
+                                          {% endif %}
+                                        </td>
+                                      </tr>
+                                    {% endfor %}
+                                      
+                                                                      
+                                  </tbody>
+                                  
+                              </table>
+                          </div>
+                      </div>
+                  </div>
+                </div>
+                
+              </div><!-- /.box-body -->
+            </div><!-- /.box -->
+            
+          </div>
+        </div>
+        {% endif %}
+{% endblock %}
+
+
+
+{% block highlight_management %} class="active" {% endblock %}
+{% block CET_treeview %}
+  active
+  {% endblock %}
+  {% block CET_menu_open %}
+  menu-open
+  {% endblock %}
+  {% block CET_menu_style %}
+  style="display: block;"
+  {% endblock %}

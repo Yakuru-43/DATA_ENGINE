@@ -1,0 +1,670 @@
+{% extends 'main/templates/index.html' %}
+{% load static %}
+{% block style %}
+<style>
+body {
+        background: #ececec;
+    }
+    /*Hidden class for adding and removing*/
+    .lds-dual-ring.hidden {
+        display: none;
+    }
+
+    /*Add an overlay to the entire page blocking any further presses to buttons or other elements.*/
+    .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,.8);
+        z-index: 9999;
+        opacity: 0.75;
+        transition: all 0.5s;
+    }
+    
+    /*Spinner Styles*/
+    .lds-dual-ring {
+        display: inline-block;
+       
+    }
+    .lds-dual-ring:after {
+        content: " ";
+        display: block;
+        width: 64px;
+        height: 64px;
+        margin: 5% auto;
+        border-radius: 50%;
+        border: 6px solid #fff;
+        border-color: #fff transparent #fff transparent;
+        animation: lds-dual-ring 1.2s linear infinite;
+    }
+    @keyframes lds-dual-ring {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+    .td_data {
+  text-align: right;
+  padding-right : 8px;
+}
+ .td_text {
+  text-align: left;
+  padding-left : 10px;
+  padding-top : 8px;
+  padding-bottom : 8px;
+}
+th {
+  text-align: center;
+  padding-top : 8px;
+  padding-bottom : 8px;
+}
+
+</style>
+ {% endblock %}
+ {% block meta %}
+<!--===============================================================================================-->
+  <link rel="stylesheet" type="text/css" href=" {% static 'cet/table_template/vendor/animate/animate.css' %} " >
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href=" {% static 'cet/table_template/vendor/select2/select2.min.css' %} " >
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href=" {% static 'cet/table_template/vendor/perfect-scrollbar/perfect-scrollbar.css' %} " >
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href=" {% static 'cet/table_template/css/util.css' %} "  >
+	<link rel="stylesheet" type="text/css" href=" {% static 'cet/table_template/css/main.css' %} " >
+<!--===============================================================================================-->
+{% endblock %}
+{% block header %}
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+  <h1>
+    Etats CNA
+    
+  </h1>
+  <!--<ol class="breadcrumb">
+      <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+      <li class="active">Dashboard</li>
+    </ol>-->
+</section>
+
+{% endblock %}
+
+{% block content %}
+<div>
+  <label for="annee" >Année </label>
+  <SELECT id="annee" name="annee" style="margin-top: 0px;margin-bottom: 10px;" required>
+    <option value="" disabled selected>Année</option>
+    {% for item in list_cet %}
+    <option value="{{item.0}}"> {{item.0}} </option>
+    {% endfor %}
+  </SELECT>
+  <label for="trim" >Période </label>
+  <SELECT id="trim" name="trim" style="margin-top: 0px;margin-bottom: 10px;" required>
+    <option value="" disabled selected>Période</option>
+  </SELECT>
+  <label for="type" >Type de données </label>
+  <SELECT id="type" name="type" style="margin-top: 0px;margin-bottom: 10px;" required>
+    <option value="br" >Branches</option>
+    <option value="se" >Segments</option>
+  </SELECT>
+  <button  id="ajaxButton" class="btn btn-block btn-success btn-xs" style="display:inline; width: 100px; margin-left: auto; margin-right: auto ; margin-top: 3px;margin-bottom: 5px;" >Générer</a> 
+</div>
+<div id="loader" class="lds-dual-ring hidden overlay"> </div>
+  <div class="row" style="width:100%">
+    <div class="col-md-12" >
+      <div class="nav-tabs-custom"  >
+        <ul class="nav nav-tabs">
+          <li class="active"><a href="#tab_1" data-toggle="tab">National</a></li>
+          <li><a href="#tab_2" data-toggle="tab">International</a></li>
+          <li class="pull-right"><a href="#" class="text-muted"><i class="fa fa-gear"></i></a></li>
+        </ul>
+        <div class="tab-content">
+          <div class="tab-pane active" id="tab_1">
+            <div id="ajax_reponse_nat"> </div>
+
+          </div><!-- /.tab-pane -->
+          <div class="tab-pane" id="tab_2">
+            <div id="ajax_reponse_int"> </div>
+            
+          </div><!-- /.tab-pane -->
+        </div><!-- /.tab-content -->
+      </div><!-- nav-tabs-custom -->
+    </div><!-- ./col -->
+</div>
+ <div class="row" style="width:50%; margin-left:auto; margin-right:auto;">
+    <div id="ajax_error" style="display: none;">
+      <div class="alert alert-danger alert-dismissable">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        <h4><i class="icon fa fa-ban"></i> Attention!</h4>
+        Merci de choisir une Année et une Période.
+      </div>
+    </div>
+ </div>
+
+
+  <script>
+    var data = JSON.parse("{{data|escapejs}}");
+    document.querySelectorAll('#annee').forEach(item => {
+      item.addEventListener('change', event => {
+        var suiv = item.nextElementSibling.nextElementSibling;
+        //DELETE THE OPTIONS 
+        var length = suiv.options.length;
+        for (i = length-1; i >= 0; i--) {
+        suiv.options[i] = null;
+        }
+
+        // GET THE VALUE SELECTED BY THE USER 
+        var annee = item.options[item.selectedIndex].value ;
+        /*
+        * FIND THE SEMESTERS OF THE SELECTED YEAR 
+        */
+        var j = 0 ;
+        var i =0 ;
+        var stop = false ;
+        while ( ( i < data["liste_cet"].length ) && !(stop) ) 
+        {
+        if (  ( data["liste_cet"][i][0] == annee  )  )
+            {
+                j= i ;
+                stop =  true ;
+                if ( data["liste_cet"][i][1] != 0  )
+                {
+                   
+                    var opt = document.createElement('option');
+                    opt.value = '1ER TRIMESTRE';
+                    opt.innerHTML = '1ER TRIMESTRE';
+                    suiv.appendChild(opt);
+                }
+                if ( data["liste_cet"][i][2] != 0  )
+                {
+                    
+                    var opt = document.createElement('option');
+                    opt.value = '1ER SEMESTRE';
+                    opt.innerHTML = '1ER SEMESTRE';
+                    suiv.appendChild(opt);
+                }
+                if ( data["liste_cet"][i][3] != 0  )
+                {
+                    
+                    var opt = document.createElement('option');
+                    opt.value = '3EME TRIMESTRE';
+                    opt.innerHTML = '3EME TRIMESTRE';
+                    suiv.appendChild(opt);
+                }
+                if ( data["liste_cet"][i][4] != 0  )
+                {
+                    
+                    var opt = document.createElement('option');
+                    opt.value = '2EME SEMESTRE';
+                    opt.innerHTML = '2EME SEMESTRE';
+                    suiv.appendChild(opt);
+                }
+            }  
+        i =i +1 ;
+        }
+      })
+    })
+
+    var httpRequest;
+    document.getElementById("ajaxButton").addEventListener('click', get_tableaux);
+
+    function get_tableaux() {
+      httpRequest = new XMLHttpRequest();
+      if (!httpRequest) {
+        alert('Abandon :( Impossible de créer une instance de XMLHTTP');
+        return false;
+      }
+      httpRequest.onreadystatechange = alertContents;
+      //GET THE VARIABLES 
+      liste_annee = document.getElementById("annee");
+      liste_trim = document.getElementById("trim");
+      liste_type = document.getElementById("type");
+      var annee = liste_annee.options[liste_annee.selectedIndex].value ;
+      var trim  = liste_trim.options[liste_trim.selectedIndex].value ;
+      var type  = liste_type.options[liste_type.selectedIndex].value ;
+      httpRequest.open('GET', '/cet/tableaux_cna/?annee='+annee+'&trim='+trim+'&type='+type,true);
+      httpRequest.send();
+    }
+
+    function alertContents() {
+      if (httpRequest.readyState === XMLHttpRequest.DONE) {
+        if (httpRequest.status === 200) {
+          //Cacher le message d'erreur
+          var x = document.getElementById("ajax_error");
+          x.style.display = "none"
+          //Cacher le truc qui tourne pour indiquer un chargement
+         
+          var element = document.getElementById("loader");
+          element.classList.add("hidden");
+
+          
+          //Vider les deux tableaux avant de réécrire les donnée
+          rep = document.getElementById("ajax_reponse_nat");
+          rep.innerHTML = "" ;
+          rep2 = document.getElementById("ajax_reponse_int");
+          rep2.innerHTML = "" ;
+          var data2 = JSON.parse(httpRequest.responseText);
+          //DESSINER LES DEUX TABLEAUX
+          //tab_br_int(data2);
+          //tab_br_nat(data2);
+          if (data2["type_data"] == 'br')
+          {
+            tab_br_int(data2);
+            tab_br_nat(data2);
+          }
+          if (data2["type_data"] == 'se')
+          {
+            tab_se_int(data2);
+            tab_se_nat(data2);
+          }
+          
+          
+        } else {
+          //alert('Il y a eu un problème avec la requête.');
+          var element = document.getElementById("loader");
+          element.classList.add("hidden");
+          var x2 = document.getElementById("ajax_error");
+          x2.style.display = "inline"
+        }
+      }
+      else {
+        
+        var element = document.getElementById("loader");
+        element.classList.remove("hidden");
+
+      }
+    }
+
+  function tab_br_int(data2) {
+    // Creation du tableau international 
+          let table = document.createElement('table');
+          let thead = document.createElement('thead');
+          let tbody = document.createElement('tbody');
+
+          table.appendChild(thead);
+          table.appendChild(tbody);
+
+          let container = document.createElement('div');
+          container.classList.add("container-table110");
+
+          let wrap = document.createElement('div');
+          wrap.classList.add("wrap-table110");
+
+          let table100 = document.createElement('div');
+          table100.classList.add("table100");
+          table100.classList.add("ver1");
+          table100.classList.add("m-b-110");
+          table100.style.paddingTop = "0px";
+          table100.style.marginBottom ="10px"
+
+          container.appendChild(wrap);
+          wrap.appendChild(table100);
+          table100.appendChild(table);
+
+          document.getElementById('ajax_reponse_int').appendChild(container);
+          //Ajout du header du tableau 
+          let row_1 = document.createElement('tr');
+          
+          
+          let heading_2 = document.createElement('th');
+          heading_2.innerHTML = "Branche";
+          let heading_3 = document.createElement('th');
+          heading_3.innerHTML = "Primes";
+          let heading_4 = document.createElement('th');
+          heading_4.innerHTML = "Sinistre";
+          let heading_5 = document.createElement('th');
+          heading_5.innerHTML = "SAP";
+
+          //row_1.appendChild(heading_1);
+          row_1.appendChild(heading_2);
+          row_1.appendChild(heading_3);
+          row_1.appendChild(heading_4);
+          row_1.appendChild(heading_5);
+          thead.appendChild(row_1);
+
+          // Creating and adding data to second row of the table
+          for (x=0 ; x <data2["liste_inter"].length ; x++)
+          {
+            let row_2 = document.createElement('tr');
+            
+            let row_2_data_2 = document.createElement('td');
+            row_2_data_2.classList.add("td_text");
+            row_2_data_2.innerHTML = data2["liste_inter"][x][1];
+            //row_2_data_2.style.fontSize ="17px"
+            row_2_data_2.style.fontWeight = "bold"
+
+            let row_2_data_3 = document.createElement('td');
+            row_2_data_3.classList.add("td_data");
+            row_2_data_3.innerHTML = parseFloat(data2["liste_inter"][x][2]).toLocaleString('en-US',{minimumFractionDigits: 2, maximumFractionDigits: 2});
+            //row_2_data_3.style.fontSize ="17px"          
+
+            let row_2_data_4 = document.createElement('td');
+            row_2_data_4.classList.add("td_data");
+            row_2_data_4.innerHTML = parseFloat(data2["liste_inter"][x][3]).toLocaleString('en-US',{minimumFractionDigits: 2, maximumFractionDigits: 2});
+            //row_2_data_4.style.fontSize ="17px"
+            
+            let row_2_data_5 = document.createElement('td');
+            row_2_data_5.classList.add("td_data");
+            row_2_data_5.innerHTML = parseFloat(data2["liste_inter"][x][4]).toLocaleString('en-US',{minimumFractionDigits: 2, maximumFractionDigits: 2});
+            //row_2_data_5.style.fontSize ="17px"
+
+
+            if (x == data2["liste_inter"].length -1 )
+            {
+              row_2_data_3.style.fontWeight = "bold";
+              row_2_data_4.style.fontWeight = "bold";
+              row_2_data_5.style.fontWeight = "bold";
+            }
+            //row_2.appendChild(row_2_data_1);
+            row_2.appendChild(row_2_data_2);
+            row_2.appendChild(row_2_data_3);
+            row_2.appendChild(row_2_data_4);
+            row_2.appendChild(row_2_data_5);
+            tbody.appendChild(row_2);
+          }
+          return;
+  }
+
+  function tab_br_nat(data2) {
+    // Creation du tableau international 
+          let table = document.createElement('table');
+          let thead = document.createElement('thead');
+          let tbody = document.createElement('tbody');
+          
+          table.appendChild(thead);
+          table.appendChild(tbody);
+
+          let container = document.createElement('div');
+          container.classList.add("container-table110");
+
+          let wrap = document.createElement('div');
+          wrap.classList.add("wrap-table110");
+
+          let table100 = document.createElement('div');
+          table100.classList.add("table100");
+          table100.classList.add("ver1");
+          table100.classList.add("m-b-110");
+          table100.style.paddingTop = "0px";
+          table100.style.marginBottom ="10px"
+
+          container.appendChild(wrap);
+          wrap.appendChild(table100);
+          table100.appendChild(table);
+
+          document.getElementById('ajax_reponse_nat').appendChild(container);
+          //Ajout du header du tableau 
+          let row_1 = document.createElement('tr');
+          
+          
+          let heading_2 = document.createElement('th');
+          heading_2.innerHTML = "Branche";
+          let heading_3 = document.createElement('th');
+          heading_3.innerHTML = "Primes";
+          let heading_4 = document.createElement('th');
+          heading_4.innerHTML = "Sinistre";
+          let heading_5 = document.createElement('th');
+          heading_5.innerHTML = "SAP";
+
+          //row_1.appendChild(heading_1);
+          row_1.appendChild(heading_2);
+          row_1.appendChild(heading_3);
+          row_1.appendChild(heading_4);
+          row_1.appendChild(heading_5);
+          thead.appendChild(row_1);
+
+          // Creating and adding data to second row of the table
+          for (x=0 ; x <data2["liste_nat"].length ; x++)
+          {
+            let row_2 = document.createElement('tr');
+            row_2.classList.add("row100");
+            row_2.classList.add("body");
+            let row_2_data_2 = document.createElement('td');
+            row_2_data_2.classList.add("td_text");
+            row_2_data_2.innerHTML = data2["liste_nat"][x][1];
+            //row_2_data_2.style.fontSize ="17px"
+            row_2_data_2.style.fontWeight = "bold"
+
+            let row_2_data_3 = document.createElement('td');
+            row_2_data_3.classList.add("td_data");
+            row_2_data_3.innerHTML = parseFloat(data2["liste_nat"][x][2]).toLocaleString('en-US',{minimumFractionDigits: 2, maximumFractionDigits: 2});
+            //row_2_data_3.style.fontSize ="17px"
+
+            let row_2_data_4 = document.createElement('td');
+            row_2_data_4.classList.add("td_data");
+            row_2_data_4.innerHTML = parseFloat(data2["liste_nat"][x][3]).toLocaleString('en-US',{minimumFractionDigits: 2, maximumFractionDigits: 2});
+            //row_2_data_4.style.fontSize ="17px"
+
+            let row_2_data_5 = document.createElement('td');
+            row_2_data_5.classList.add("td_data");
+            row_2_data_5.innerHTML = parseFloat(data2["liste_nat"][x][4]).toLocaleString('en-US',{minimumFractionDigits: 2, maximumFractionDigits: 2});
+            //row_2_data_5.style.fontSize ="17px"
+            
+            if (x == data2["liste_inter"].length -1 )
+            {
+              row_2_data_3.style.fontWeight = "bold";
+              row_2_data_4.style.fontWeight = "bold";
+              row_2_data_5.style.fontWeight = "bold";
+            }
+            //row_2.appendChild(row_2_data_1);
+            row_2.appendChild(row_2_data_2);
+            row_2.appendChild(row_2_data_3);
+            row_2.appendChild(row_2_data_4);
+            row_2.appendChild(row_2_data_5);
+            tbody.appendChild(row_2);
+          }
+          return;
+  }
+
+  function tab_se_int(data2) {
+    // Creation du tableau international 
+          let table = document.createElement('table');
+          let thead = document.createElement('thead');
+          let tbody = document.createElement('tbody');
+
+          table.appendChild(thead);
+          table.appendChild(tbody);
+
+          let container = document.createElement('div');
+          container.classList.add("container-table110");
+
+          let wrap = document.createElement('div');
+          wrap.classList.add("wrap-table110");
+
+          let table100 = document.createElement('div');
+          table100.classList.add("table100");
+          table100.classList.add("ver1");
+          table100.classList.add("m-b-110");
+          table100.style.paddingTop = "0px";
+          table100.style.marginBottom ="10px"
+
+          container.appendChild(wrap);
+          wrap.appendChild(table100);
+          table100.appendChild(table);
+
+          document.getElementById('ajax_reponse_int').appendChild(container);
+          //Ajout du header du tableau 
+          let row_1 = document.createElement('tr');
+          
+          
+          let heading_2 = document.createElement('th');
+          heading_2.innerHTML = "Branche";
+          let heading_3 = document.createElement('th');
+          heading_3.innerHTML = "Primes";
+          let heading_4 = document.createElement('th');
+          heading_4.innerHTML = "Sinistre";
+          let heading_5 = document.createElement('th');
+          heading_5.innerHTML = "SAP";
+
+          //row_1.appendChild(heading_1);
+          row_1.appendChild(heading_2);
+          row_1.appendChild(heading_3);
+          row_1.appendChild(heading_4);
+          row_1.appendChild(heading_5);
+          thead.appendChild(row_1);
+
+          // Creating and adding data to second row of the table
+          for (x=0 ; x <data2["liste_inter"].length ; x++)
+          {
+            
+            let row_2 = document.createElement('tr');
+            if (data2["liste_inter"][x][5] == 'Y') {
+              row_2.style.backgroundColor = "#d6d6d6";
+            }
+            let row_2_data_2 = document.createElement('td');
+            row_2_data_2.classList.add("td_text");
+            row_2_data_2.innerHTML = data2["liste_inter"][x][1];
+            //row_2_data_2.style.fontSize ="17px"
+            row_2_data_2.style.fontWeight = "bold"
+
+            let row_2_data_3 = document.createElement('td');
+            row_2_data_3.classList.add("td_data");
+            row_2_data_3.innerHTML = parseFloat(data2["liste_inter"][x][2]).toLocaleString('en-US',{minimumFractionDigits: 2, maximumFractionDigits: 2});
+            //row_2_data_3.style.fontSize ="17px" 
+
+            let row_2_data_4 = document.createElement('td');
+            row_2_data_4.classList.add("td_data");
+            row_2_data_4.innerHTML = parseFloat(data2["liste_inter"][x][3]).toLocaleString('en-US',{minimumFractionDigits: 2, maximumFractionDigits: 2});
+            //row_2_data_4.style.fontSize ="17px"
+            
+            
+            let row_2_data_5 = document.createElement('td');
+            row_2_data_5.classList.add("td_data");
+            row_2_data_5.innerHTML = parseFloat(data2["liste_inter"][x][4]).toLocaleString('en-US',{minimumFractionDigits: 2, maximumFractionDigits: 2});
+            //row_2_data_5.style.fontSize ="17px"
+
+            if (x == data2["liste_inter"].length -1 )
+            {
+              row_2_data_3.style.fontWeight = "bold";
+              row_2_data_4.style.fontWeight = "bold";
+              row_2_data_5.style.fontWeight = "bold";
+            }
+            //row_2.appendChild(row_2_data_1);
+            row_2.appendChild(row_2_data_2);
+            row_2.appendChild(row_2_data_3);
+            row_2.appendChild(row_2_data_4);
+            row_2.appendChild(row_2_data_5);
+            tbody.appendChild(row_2);
+          }
+          return;
+  }
+
+  function tab_se_nat(data2) {
+    // Creation du tableau international 
+          let table = document.createElement('table');
+          let thead = document.createElement('thead');
+          let tbody = document.createElement('tbody');
+
+          table.appendChild(thead);
+          table.appendChild(tbody);
+
+          let container = document.createElement('div');
+          container.classList.add("container-table110");
+
+          let wrap = document.createElement('div');
+          wrap.classList.add("wrap-table110");
+
+          let table100 = document.createElement('div');
+          table100.classList.add("table100");
+          table100.classList.add("ver1");
+          table100.classList.add("m-b-110");
+          table100.style.paddingTop = "0px";
+          table100.style.marginBottom ="10px"
+
+          container.appendChild(wrap);
+          wrap.appendChild(table100);
+          table100.appendChild(table);
+
+          document.getElementById('ajax_reponse_nat').appendChild(container);
+          //Ajout du header du tableau 
+          let row_1 = document.createElement('tr');
+          
+          
+          let heading_2 = document.createElement('th');
+          heading_2.innerHTML = "Branche";
+          let heading_3 = document.createElement('th');
+          heading_3.innerHTML = "Primes";
+          let heading_4 = document.createElement('th');
+          heading_4.innerHTML = "Sinistre";
+          let heading_5 = document.createElement('th');
+          heading_5.innerHTML = "SAP";
+
+          //row_1.appendChild(heading_1);
+          row_1.appendChild(heading_2);
+          row_1.appendChild(heading_3);
+          row_1.appendChild(heading_4);
+          row_1.appendChild(heading_5);
+          thead.appendChild(row_1);
+
+          // Creating and adding data to second row of the table
+          for (x=0 ; x <data2["liste_nat"].length ; x++)
+          {
+            let row_2 = document.createElement('tr');
+            if (data2["liste_inter"][x][5] == 'Y') {
+              row_2.style.backgroundColor = "#d6d6d6";
+            }
+            let row_2_data_2 = document.createElement('td');
+            row_2_data_2.classList.add("td_text");
+            row_2_data_2.innerHTML = data2["liste_nat"][x][1];
+            //row_2_data_2.style.fontSize ="17px"
+            row_2_data_2.style.fontWeight = "bold"
+
+            let row_2_data_3 = document.createElement('td');
+            row_2_data_3.classList.add("td_data");
+            row_2_data_3.innerHTML = parseFloat(data2["liste_nat"][x][2]).toLocaleString('en-US',{minimumFractionDigits: 2, maximumFractionDigits: 2});
+            //row_2_data_3.style.fontSize ="17px"
+
+            let row_2_data_4 = document.createElement('td');
+            row_2_data_4.classList.add("td_data");
+            row_2_data_4.innerHTML = parseFloat(data2["liste_nat"][x][3]).toLocaleString('en-US',{minimumFractionDigits: 2, maximumFractionDigits: 2});
+            //row_2_data_4.style.fontSize ="17px"
+
+            let row_2_data_5 = document.createElement('td');
+            row_2_data_5.classList.add("td_data");
+            row_2_data_5.innerHTML = parseFloat(data2["liste_nat"][x][4]).toLocaleString('en-US',{minimumFractionDigits: 2, maximumFractionDigits: 2});
+            //row_2_data_5.style.fontSize ="17px"
+            
+            if (x == data2["liste_inter"].length -1 )
+            {
+              row_2_data_3.style.fontWeight = "bold";
+              row_2_data_4.style.fontWeight = "bold";
+              row_2_data_5.style.fontWeight = "bold";
+            }
+            //row_2.appendChild(row_2_data_1);
+            row_2.appendChild(row_2_data_2);
+            row_2.appendChild(row_2_data_3);
+            row_2.appendChild(row_2_data_4);
+            row_2.appendChild(row_2_data_5);
+            tbody.appendChild(row_2);
+          }
+          return;
+  }
+  
+ 
+  </script>
+    <!-- jQuery 2.1.3 -->
+  <script src=" {% static 'cet/plugins/jQuery/jQuery-2.1.3.min.js' %} "></script>
+  
+
+{% endblock %}
+{% block highlight_cna %}
+class="active"
+{% endblock %}
+{% block highlight_cna_excel %}
+class="active"
+{% endblock %}
+{% block cna_treeview %}
+active
+{% endblock %}
+{% block cna_menu_open %}
+menu-open
+{% endblock %}
+{% block cna_menu_style %}
+style="display: block;"
+{% endblock %}
+{% block cna_menu_style2 %}
+style="display: block;"
+{% endblock %}

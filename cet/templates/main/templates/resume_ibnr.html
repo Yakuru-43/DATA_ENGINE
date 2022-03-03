@@ -1,0 +1,233 @@
+{% extends 'main/templates/index.html' %}
+{% load static %}
+{% load humanize %}
+{% block meta %}
+<style>
+    /*table,
+    td {
+  border: 1px solid black;
+}
+    th {
+        border: 1px solid black;
+        text-align: center;
+    }
+
+    table {
+        width: 90%;
+        border-collapse: collapse;
+    }
+    .hide {
+  visibility: hidden;
+  border: none;
+}*/
+</style>
+<!--===============================================================================================-->
+<link rel="stylesheet" type="text/css" href=" {% static 'cet/table_template/vendor/animate/animate.css' %} " >
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href=" {% static 'cet/table_template/vendor/select2/select2.min.css' %} " >
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href=" {% static 'cet/table_template/vendor/perfect-scrollbar/perfect-scrollbar.css' %} " >
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href=" {% static 'cet/table_template/css/util.css' %} "  >
+	<link rel="stylesheet" type="text/css" href=" {% static 'cet/table_template/css/main.css' %} " >
+<!--===============================================================================================-->
+
+{% endblock %}
+
+{% block header %}
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        IBNR
+        <small>Résumé IBNR. </small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="/cet"><i class="fa fa-dashboard"></i> CET</a></li>
+        <li class="active">IBNR</li>
+    </ol>
+</section>
+
+{% endblock %}
+
+
+{% block content %}
+
+{% if condition %}
+<div class="container" style="margin-top: 30px; width: 100%;">
+    <div class="row">
+        <div class="col-md-17">
+            <div class="nav-tabs-custom">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a href="#tab_1" data-toggle="tab">Résumé</a></li>
+                    <!--<li><a href="#tab_2" data-toggle="tab">Visualisation</a></li>-->
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane active" id="tab_1">
+                        <!-- INSERTION CONTENT -->
+                        <!-- /.box-body -->
+
+                        <input type="hidden" name ="branche_hidden" value="{{branche}}">
+
+                          <!-- TABLEAU CONTENANT LE RESUME -->
+                        <div class="container-table110" >
+                            <div class="wrap-table110">
+                                <div class="table100 ver1 m-b-110 " style="padding-top: 0px;">
+                                    <div>
+                                        <table class="table100-body">
+                                            <thead>
+                                                <tr class="row100 head" >
+                                                    <th  style="padding-left:30px ;  height: 50px;" > Branche</th>
+                                                    <th   >Portfolio</th>
+                                                    <th  >Zone</th>
+                                                    <th >SAP avant IBNR </th>
+                                                    <th   >IBNR</th>
+                                                    <th   >SAP apres IBNR</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for ligne in resume_sap %}
+                                                <tr class="row100 body"  >
+                                                    <td   style="padding-left:30px ; "> {{ligne.0}}</td>
+                                                    <td   > {{ligne.4}}</td>
+                                                    <td   > {{ligne.5}}</td>
+                                                    <td   > {{ligne.1|intcomma}}</td>
+                                                    <td   > {{ligne.2|intcomma}}</td>
+                                                    <td   > {{ligne.3|intcomma}}</td>
+                                                    
+                                                </tr>
+                                                {% endfor %}
+                                                                                
+                                            </tbody>
+                                            <tfoot></tfoot>
+                                                <tr class="row100 body" >
+                                                  <td style="padding-left:30px ; "><b>Total :</b></td>
+                                                  <td > </td>
+                                                  <td > </td>
+                                                  <td ><b>{{totale_avant_ibnr|intcomma}}</b></td>
+                                                  <td ><b>{{totale_ibnr|intcomma}}</b></td>
+                                                  <td ><b>{{totale_apres_ibnr|intcomma}}</b></td>
+                                                  
+                                                </tr>
+                                               </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div><!-- /.tab-pane -->
+                    <div class="tab-pane" id="tab_2">
+                        <!-- VISUALISATION  CONTENT -->
+                        
+
+
+                    </div><!-- /.tab-pane -->
+                </div><!-- /.tab-content -->
+            </div><!-- nav-tabs-custom -->
+        </div><!-- ./col -->
+
+        <div class="col-sm-4">
+        </div>
+    </div>
+
+
+
+    {% else %}
+    <p>Vous devez d'abord insérer le CET.</p>
+
+
+    {% endif %}
+
+    <script type="text/javascript">
+        var data = JSON.parse("{{data|escapejs}}");
+        var table = document.getElementById("myTable1");
+        var new_tbody = document.createElement('tbody');
+        const listebranches = document.getElementById('listebranches');
+        const buttonFiltrer = document.getElementById('btnFiltrer');
+
+        function tableCreate(){
+            var branche = listebranches.value;
+            var body = document.getElementById('test');
+                tbl  = document.createElement('table');
+            tbl.id='test01'
+            tbl.style.width  = '100%';
+            tbl.style.border = '1px solid black';
+            var tr = tbl.insertRow();
+            var td = tr.insertCell();
+            td.innerHTML = "Année souscription".bold();
+            var td = tr.insertCell();
+            td.innerHTML = "SAP avant IBNR".bold();
+            var td = tr.insertCell();
+            td.innerHTML = "IBNR".bold();
+            var td = tr.insertCell();
+            td.innerHTML = "SAP après IBNR".bold();
+            var td = tr.insertCell();
+            td.innerHTML = "Taux de majoration".bold();
+            for(var i = 0; i < 16; i++){
+                var tr = tbl.insertRow();
+                for(var j = 0; j < 5; j++){
+                        var i2 =0 ;
+                        var i3 =1 ;
+                        while ((i2< data["liste_sap"].length) && (i3 ==1 ) )
+                        {   
+                            if (branche == data["liste_sap"][i2][1]) {
+                                i3= 0 ;
+                            }
+                            i2 = i2+1;
+                        }   
+                        var td = tr.insertCell();
+                        if (j+2 == 6 )
+                        {
+                            myInput = document.createElement('input');
+                            myInput.setAttribute('type', 'number');
+                            myInput.setAttribute('style', "box-sizing: border-box; width: 100%;")
+                            myInput.setAttribute('value', data["liste_sap"][i+i2-1][6]);
+                            td.append(myInput)
+                        }
+                        else {
+                            td.innerHTML = data["liste_sap"][i+i2 -1][j+2];
+                        }
+                        
+                        td.style.border = '1px solid black';
+                }
+            }
+            body.appendChild(tbl);
+        }
+        
+
+        buttonFiltrer.addEventListener('click',function () {
+           
+            
+            var element = document.getElementById("test01");
+            if (element != null)
+            {
+                element.remove();
+            }
+            
+            tableCreate();
+        }
+        );
+
+       </script> 
+
+    {% endblock %}
+
+    {% block highlight_ibnr %} class="active" {% endblock %}
+    {% block highlight_ibnr3 %} class="active" {% endblock %}
+    {% block CET_treeview %}
+    active
+    {% endblock %}
+    {% block CET_menu_open %}
+    menu-open
+    {% endblock %}
+    {% block CET_menu_style %}
+    style="display: block;"
+    {% endblock %}
+    {% block ibnr_menu_open %}
+menu-open
+{% endblock %}
+{% block ibnr_menu_style %}
+style="display: block;"
+{% endblock %}

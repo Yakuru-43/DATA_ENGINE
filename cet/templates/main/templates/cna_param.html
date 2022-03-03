@@ -1,0 +1,618 @@
+{% extends 'main/templates/index.html' %}
+{% load static %}
+{% block style %}
+<style>
+body {
+        background: #ececec;
+    }
+    /*Hidden class for adding and removing*/
+    .lds-dual-ring.hidden {
+        display: none;
+    }
+
+    /*Add an overlay to the entire page blocking any further presses to buttons or other elements.*/
+    .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,.8);
+        z-index: 9999;
+        opacity: 0.75;
+        transition: all 0.5s;
+    }
+    
+    /*Spinner Styles*/
+    .lds-dual-ring {
+        display: inline-block;
+       
+    }
+    .lds-dual-ring:after {
+        content: " ";
+        display: block;
+        width: 64px;
+        height: 64px;
+        margin: 5% auto;
+        border-radius: 50%;
+        border: 6px solid #fff;
+        border-color: #fff transparent #fff transparent;
+        animation: lds-dual-ring 1.2s linear infinite;
+    }
+    @keyframes lds-dual-ring {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+.gridview
+{
+    border-collapse: collapse;
+    margin: 0px 10px 10px 0;
+    box-shadow: 3px 3px 4px #bbb;    
+}
+
+.gridview, .gridview td,  .gridview th
+{
+    border:  1px solid ;
+}
+.gridview tr:hover td, .gridview tbody tr:hover td
+{
+    background-color: #FFFFD7;
+    color: #696969;
+    cursor: pointer; 
+}
+.gridview .selected, .gridview tbody .selected
+{
+    background-color: #6ccbfb;
+    
+}
+input
+{
+    background: transparent;
+    border: none;
+    width : 100%;
+}
+.container {
+    width : 100%;
+  display: flex; /* or inline-flex */
+  flex-direction: row;
+  justify-content: flex-start;
+}
+
+.subcontainer {
+  display: flex; /* or inline-flex */
+   flex-direction: column;
+}
+
+
+</style>
+ {% endblock %}
+ {% block meta %}
+<!--===============================================================================================-->
+  <link rel="stylesheet" type="text/css" href=" {% static 'cet/table_template/vendor/animate/animate.css' %} " >
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href=" {% static 'cet/table_template/vendor/select2/select2.min.css' %} " >
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href=" {% static 'cet/table_template/vendor/perfect-scrollbar/perfect-scrollbar.css' %} " >
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href=" {% static 'cet/table_template/css/util.css' %} "  >
+	<link rel="stylesheet" type="text/css" href=" {% static 'cet/table_template/css/main.css' %} " >
+<!--===============================================================================================-->
+{% endblock %}
+{% block header %}
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+  <h1>
+    Parametres CNA
+    
+  </h1>
+  <!--<ol class="breadcrumb">
+      <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+      <li class="active">Dashboard</li>
+    </ol>-->
+</section>
+
+{% endblock %}
+
+{% block content %}
+<!--Partie concernant les segments-->
+<div class='container' >
+    <div style="flex-basis: 700px"><!-- DIV CONTENANT LE TABLEAU DES SEGMENTS -->
+        <table id="segmentsCna" class="gridview item" >
+            <tr>
+                <th>Ordre </th>
+                <th>Nom </th>
+                <th>Total</th>
+            </tr>
+            {% for elem in liste_cna %}
+            <tr  onclick="toggleClass(this,'selected');">
+                <input type="hidden" value="{{ elem.id }}">
+
+                <td id="data_cell" style="width:80px"><input name="order" type="number" value ="{{ elem.cna_order }}"></td>
+
+                <td id="data_cell"><input name="name" type="text" value="{{ elem.name }}"></td>
+
+                <td id="data_cell"><select name="is_total" id="is_total" >
+                        <option value="Y" {% if elem.is_total ==  'Y'  %} selected {% endif %}>Yes</option>
+                        <option value="N" {% if elem.is_total ==  'N'  %} selected {% endif %}>No</option>
+                    </select>
+                </td>
+            </tr>
+                
+            {% endfor %}
+            <tr>
+            <form  method="POST">
+            {% csrf_token %}
+                
+                <td>{{ form.cna_order }}</td>
+                <td>{{ form.name }}</td>
+                <td>{{ form.is_total }}</td>
+            </tr>
+        </table>
+    </div>
+    <div class="subcontainer"  style="margin-left:10px"> 
+            <div> <input type="submit" value="Ajouter" style="width:100px"></div>
+                </form>
+        
+        <div style="margin-top:10px"><!-- DIV CONTENANT LE BTN MODIFIER-->
+            <button class="btn btn-block btn-success btn-xs" onclick="modifierSeg()"> Modifier</button>
+        </div> 
+        <div style="margin-top:10px"><!-- DIV CONTENANT LE BTN SUPPRIMER-->
+            <button class="btn btn-block btn-success btn-xs" id="btnSupSeg"> Supprimer</button>
+        </div> 
+    </div>
+
+    <div id="mess_succ" class="callout callout-success" style="margin-left: 20px; display : none; width :30%; height: 90px">
+        <h4>Message</h4>
+        <p>Les modifications ont été sauvegardées.</p>
+    </div>
+    <div id="mess_erreur" class="callout callout-danger" style="margin-left: 20px; display : none; width :30%; height: 90px">
+        <h4>Message</h4>
+        <p>Une erreur s'est produite.</p>
+    </div>
+</div>
+<!--Partie concernant les branches-->
+<div class='container' id="container_branches" style="display:none">
+    <div id="tableau_branches" ></div>
+    <div class="subcontainer"  style="margin-left:10px"> 
+            
+        
+        <div style="margin-top:10px"><!-- DIV CONTENANT LE BTN MODIFIER-->
+            <button class="btn btn-block btn-success btn-xs"  id="btnAjBr"> Ajouter</button>
+        </div> 
+        <div style="margin-top:10px"><!-- DIV CONTENANT LE BTN SUPPRIMER-->
+            <button class="btn btn-block btn-success btn-xs" id="btnSupBr"> Supprimer</button>
+        </div> 
+    </div>
+
+    <div id="mess_succ_branches" class="callout callout-success" style="margin-left: 20px; display : none; width :30%; height: 90px">
+        <h4>Message</h4>
+        <p>Les modifications ont été sauvegardées.</p>
+    </div>
+
+</div>
+
+    
+
+<script>
+    function toggleClass(el, className) {
+    //DELETE THE HIGHLIGHT FROM ALL THE ROWS THEN HIGHLIGTH THE SELECTED ROW 
+            //SHOW THE CONTAINER THAT CONTAINS THE TABLE OF BRANCHES AND THE buttons
+            var container_branches = document.getElementById("container_branches");
+            container_branches.style.display="flex";
+            var table = document.getElementById("segmentsCna");
+            for (var i = 0, row; row = table.rows[i]; i++) {
+                row.classList.remove(className);
+                            }
+            if (el.className.indexOf(className) >= 0) {
+                el.className = el.className.replace(className,"");
+            }
+            else {
+                el.className  += className;
+            }
+            // GET THE ID IN THE HIDDEN INPUT 
+            var id_value = el.children[0].value 
+
+            // AJAX CALL TO GET THE BRANCHES OF THE SELECTED SEGMENT 
+            httpRequest = new XMLHttpRequest();
+            if (!httpRequest) {
+                alert('Abandon :( Impossible de créer une instance de XMLHTTP');
+                return false;
+            }
+            httpRequest.onreadystatechange = alertContents;
+            //GET THE VARIABLES 
+            
+            httpRequest.open('GET', '/cet/get_segments_branches/?id='+id_value);
+            httpRequest.send();
+    }
+
+
+    function alertContents() {
+    //Alert content called with ajax
+        if (httpRequest.readyState === XMLHttpRequest.DONE) {
+            if (httpRequest.status === 200) {
+            
+            var data2 = JSON.parse(httpRequest.responseText);
+            
+            //EMPTY THE BRANCHES TABLE
+            var tableau = document.getElementById('tableau_branches')
+            tableau.innerHTML = ""
+            /*if (data2["liste_branches_cna"].length >0)
+            {
+                tab_branches(data2) ;
+            }
+
+            } else {
+            alert('Il y a eu un problème avec la requête.');
+*/
+            tab_branches(data2) ;
+            }
+        }
+        else {
+            //WHILE WAITING FOR THE RESPONSE 
+            /*var element = document.getElementById("loader");
+            element.classList.remove("hidden");*/
+
+        }
+    }
+    function tab_branches(data2) {
+    // Creation du tableau DES BRANCHES 
+        let table = document.createElement('table');
+        let thead = document.createElement('thead');
+        let tbody = document.createElement('tbody');
+
+        table.appendChild(thead);
+        table.appendChild(tbody);
+
+        table.classList.add("gridview");
+        table.setAttribute("id", "tab_br");
+
+        let container = document.createElement('div');
+        container.classList.add("container-table110");
+
+        let wrap = document.createElement('div');
+        wrap.classList.add("wrap-table110");
+
+        let table100 = document.createElement('div');
+        table100.classList.add("table100");
+        table100.classList.add("ver1");
+        table100.classList.add("m-b-110");
+        table100.style.paddingTop = "0px";
+        table100.style.marginBottom ="10px"
+
+        container.appendChild(wrap);
+        wrap.appendChild(table100);
+        table100.appendChild(table);
+
+        document.getElementById('tableau_branches').appendChild(container);
+        var tableau = document.getElementById('tableau_branches')
+        tableau.style.width ="50%"
+        //Ajout du header du tableau 
+        let row_1 = document.createElement('tr');
+        
+        
+        //let heading_2 = document.createElement('th');
+        //heading_2.innerHTML = "Segment";
+        let heading_3 = document.createElement('th');
+        heading_3.innerHTML = "Branche";
+
+
+        //row_1.appendChild(heading_1);
+        //row_1.appendChild(heading_2);
+        row_1.appendChild(heading_3);
+
+        thead.appendChild(row_1);
+
+        // Creating and adding data to second row of the table
+        for (x=0 ; x <data2["liste_branches_cna"].length ; x++)
+        {
+            let row_2 = document.createElement('tr');
+            // ADD THE LISTENER TO THE ROW 
+            row_2.addEventListener('click', event => {
+                toggleClassBr(row_2, 'selected');
+            })
+            //ADD THE HIDDENT INPUTS
+            var hidden_fk = document.createElement('input');
+            var hidden_code_branche = document.createElement('input');
+            hidden_fk.type = 'hidden';
+            hidden_fk.value = data2["id"];
+            hidden_code_branche.type = 'hidden';
+            hidden_code_branche.value = data2["liste_branches_cna"][x][2];
+
+            
+            
+            let row_2_data_3 = document.createElement('td');
+            row_2_data_3.classList.add("td_data");
+            row_2_data_3.innerHTML = data2["liste_branches_cna"][x][1];
+            //row_2_data_3.style.fontSize ="17px"          
+            row_2.appendChild(hidden_fk);
+            row_2.appendChild(hidden_code_branche);
+            //row_2.appendChild(row_2_data_2);
+            row_2.appendChild(row_2_data_3);
+
+            tbody.appendChild(row_2);
+            
+        }
+        //ADD THE INPUT SELECT 
+        var row_2 = document.createElement('tr');
+        var row_td = document.createElement('td');
+        var input_select = document.createElement('select');
+        input_select.id = 'select_br';
+        input_select.name = 'select_br';
+        var option_disabled = document.createElement('option');
+        option_disabled.innerHTML ="Choisir une branche";
+        option_disabled.value ="null";
+        option_disabled.disabled = "true"
+        option_disabled.selected = "true"
+
+        var hidden_fk = document.createElement('input');
+        hidden_fk.value = data2["id"];
+        hidden_fk.type="hidden";
+        row_td.appendChild(hidden_fk);
+        input_select.appendChild(option_disabled);
+        for (x=0 ; x <data2["liste_branches"].length ; x++)
+        {
+            var option = document.createElement('option');
+            option.value =data2["liste_branches"][x][0];
+            option.innerHTML =data2["liste_branches"][x][1];
+            input_select.appendChild(option);
+
+        }
+        row_td.appendChild(input_select);
+        row_2.appendChild(row_td);
+        tbody.appendChild(row_2);
+        
+
+
+
+    }
+    //ADD THE CLASS MODIFIED TO ALL THE CELLS THAT GET MODIFIED
+    document.querySelectorAll('#data_cell').forEach(item => {
+      item.addEventListener('change', event => {
+        item.classList.add("modified");
+      })
+    })
+
+    //LISTENER FOR MODIFIER SEGMENT BUTTON 
+    function modifierSeg(){
+        document.querySelectorAll('.modified').forEach(item => {
+        //GET THE MODIFIED ELEMENT AND IT'S VALUE
+        colonne_modifie = item.children[0].name;
+        new_value = item.children[0].value;
+
+        //GET THE PARENT ELEMENT 
+        let parent = item.parentElement ;
+        //GET THE ID OF THE MODIFIED ITEM
+        id = parent.children[0].value ;
+        // AJAX CALL TO MODIFY THE ACTUAL DATA IN DB 
+        httpRequest = new XMLHttpRequest();
+            if (!httpRequest) {
+                alert('Abandon : Impossible de créer une instance de XMLHTTP');
+                return false;
+            }
+            httpRequest.onreadystatechange = alertContents_update;
+            //GET THE VARIABLES 
+            
+            httpRequest.open('GET', '/cet/segments_update/?id='+id+'&col_mod='+colonne_modifie+'&new_val='+new_value);
+            httpRequest.send();
+        })
+
+    }
+    
+    function alertContents_update() {
+    //Alert content called with ajax
+        if (httpRequest.readyState === XMLHttpRequest.DONE) {
+            if (httpRequest.status === 200) {
+            
+            var data2 = JSON.parse(httpRequest.responseText);
+            document.getElementById('mess_succ').style.display='block';
+            setTimeout(function () {
+                document.getElementById('mess_succ').style.display='none';
+            }, 2500);
+          
+            
+            } else {
+            alert('Il y a eu un problème avec la requête.');
+            
+            }
+        }
+        else {
+            //WHILE WAITING FOR THE RESPONSE 
+            
+        }
+    }
+        
+   //LISTENER FOR SUPPRIMER SEGMENT BUTTON 
+    var btnSupSeg = document.getElementById('btnSupSeg') 
+    
+    btnSupSeg.addEventListener('click', function() {  
+        var selectedRow = document.querySelector('.selected');
+        if (!selectedRow )
+        {
+            alert("pas de seg selectionné")
+        }
+        else 
+        {
+            //AJAX CALL TO DELETE THE SEGMENT
+            console.log (selectedRow.children[0].value);
+            
+            httpRequest = new XMLHttpRequest();
+            if (!httpRequest) {
+                alert('Abandon : Impossible de créer une instance de XMLHTTP');
+                return false;
+            }
+            httpRequest.onreadystatechange = alertContents_delete;
+            //GET THE VARIABLES 
+            let id = selectedRow.children[0].value;
+            //SEND THE REQUEST
+            httpRequest.open('GET', '/cet/segments_delete/?id='+id);
+            httpRequest.send();
+
+        }
+
+    });
+    
+    function alertContents_delete() {
+    //Alert content called with ajax
+        if (httpRequest.readyState === XMLHttpRequest.DONE) {
+            if (httpRequest.status === 200) {
+            
+                var data2 = JSON.parse(httpRequest.responseText);
+                document.getElementById('mess_succ').style.display='block';
+                setTimeout(function () {
+                    document.getElementById('mess_succ').style.display='none';
+                }, 2500);
+                var selectedRow = document.querySelector('.selected');
+                document.getElementById("segmentsCna").deleteRow(selectedRow.rowIndex); 
+
+            
+            } else {
+            alert('Il y a eu un problème avec la requête.');
+            
+            }
+        }
+        else {
+            //WHILE WAITING FOR THE RESPONSE 
+            
+        }
+    }  
+    
+
+    //FONCTION THAT IS CALED WHEN YOU CLICK ON A ROW IN THE BRANCHES TABLE
+    function toggleClassBr(el, className) {
+    //DELETE THE HIGHLIGHT FROM ALL THE ROWS THEN HIGHLIGTH THE SELECTED ROW 
+   
+            var table = document.getElementById("tab_br");
+            for (var i = 0, row; row = table.rows[i]; i++) {
+                row.classList.remove(className);
+                            }
+            if (el.className.indexOf(className) >= 0) {
+                el.className = el.className.replace(className,"");
+            }
+            else {
+                el.classList.add(className);
+            }
+            // GET THE ID IN THE HIDDEN INPUT 
+            //var id_value = el.children[0].value 
+            //var id_branche = el.children[1].value 
+           
+    }
+
+    ////LISTENER FOR ADDING A BRANCHE  BUTTON 
+    var btnAjBr = document.getElementById('btnAjBr') 
+    btnAjBr.addEventListener('click', function() {  
+       
+        //GET THE DATA
+        var select_br = document.getElementById('select_br') ;
+        var option_br = select_br.value ;
+        var seg_id = select_br.previousSibling.value;
+        console.log(option_br)
+        console.log(seg_id)
+        if (option_br == 'null')
+        {
+            alert("Veuillez selectionner une branche.");
+        }
+        else {
+            
+            //AJAX CALL TO DELETE THE SEGMENT
+
+            httpRequest = new XMLHttpRequest();
+            if (!httpRequest) {
+                alert('Abandon : Impossible de créer une instance de XMLHTTP');
+                return false;
+            }
+            httpRequest.onreadystatechange = alertContents_br_add;
+            
+            //SEND THE REQUEST
+            httpRequest.open('GET', '/cet/segments_br_add/?id_seg='+seg_id+'&code_br='+option_br);
+            httpRequest.send();
+        }
+
+    });
+
+    function alertContents_br_add() {
+    //Alert content called with ajax
+        if (httpRequest.readyState === XMLHttpRequest.DONE) {
+            if (httpRequest.status === 200) {
+            
+                var data2 = JSON.parse(httpRequest.responseText);
+                if (data2['erreur'] != 0)
+                {
+                    console.log("il ya une erreur")
+                    document.getElementById('mess_erreur').style.display='block';
+                    document.getElementById('mess_erreur').children[1].innerHTML = (data2['erreur_msg']);
+                    setTimeout(function () {
+                        document.getElementById('mess_erreur').style.display='none';
+                    }, 2500);
+                    
+
+                }
+                else {
+                    console.log("no erreur")
+                    document.getElementById('mess_succ').style.display='block';
+                    setTimeout(function () {
+                        document.getElementById('mess_succ').style.display='none';
+                    }, 2500);
+                    //ADDING THE NEW ROW TO THA TABLE 
+                    var table_br =  document.getElementById('tab_br');
+                    var row = table_br.insertRow(1);
+                    var hidden_fk = document.createElement('input');
+                    var hidden_code_branche = document.createElement('input');
+                    // ADDING THE HIDDENT INPUT FIELDS
+                    hidden_fk.type = 'hidden';
+                    hidden_fk.value = data2["id"];
+                    hidden_code_branche.type = 'hidden';
+                    hidden_code_branche.value = data2["code_br"];
+                    row.appendChild(hidden_fk);
+                    row.appendChild(hidden_code_branche);
+                    // ADDING THE EVENT LISTENER TO HIGHLIGHT THE ROW IF SELECTED
+                    row.addEventListener('click', event => {
+                        toggleClassBr(row, 'selected');
+                    })
+                    
+                    var cell1 = row.insertCell(0);
+                    cell1.innerHTML = data2['name_branche']
+
+
+                }
+
+            } else {
+            alert('Il y a eu un problème avec la requête.');
+            
+            }
+        }
+        else {
+            //WHILE WAITING FOR THE RESPONSE 
+            
+        }
+    }  
+</script>
+
+
+    <!-- jQuery 2.1.3 -->
+<script src=" {% static 'cet/plugins/jQuery/jQuery-2.1.3.min.js' %} "></script>
+  
+
+{% endblock %}
+{% block highlight_cna %}
+class="active"
+{% endblock %}
+{% block highlight_cna2 %}
+class="active"
+{% endblock %}
+{% block cna_treeview %}
+active
+{% endblock %}
+{% block cna_menu_open %}
+menu-open
+{% endblock %}
+{% block cna_menu_style %}
+style="display: block;"
+{% endblock %}
+{% block cna_menu_style2 %}
+style="display: block;"
+{% endblock %}

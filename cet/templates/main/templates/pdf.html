@@ -1,0 +1,130 @@
+
+{% extends 'main/templates/index.html' %}
+{% load static %}
+{% block content %}
+
+<!-- <iframe src=" {% static '/pdf/hello.pdf#toolbar=0'%}" width="100%" height="500px"> </iframe> -->
+  <div>
+    <!-- CAS OU ON A GENERER UN PDF EN PASSANT PAR LE MENU BILAN-->
+    {% if origine == 'pdf' %}
+      {% if rms_active == 0 %}  
+        <div style="position: relative;">
+          <form class="form-inline save_pdf" action="{% url 'cet:sauvegarderpdf'  %}" method="post" style="margin-bottom:15px;">
+            {% csrf_token %}
+            <input type="hidden" class="hidden" value="{{ name_pdf }}" name="name_pdf">
+            <button type="submit3" class="confirmation btn btn-success" att="{% url 'cet:sauvegarderpdf'  %}"  >VALIDER CET</button>
+          </form>
+          <!-- <a href="/cet/sauvegarderpdf" class="btn btn-block btn-primary" 
+            style="width: 150px;margin-top: 20px ; margin-bottom: 20px;">Sauvegarder CET</a> -->
+        </div>
+      {% endif %}
+    {% endif %}
+    <!-- CAS OU ON A GENERER UN PDF EN PASSANT PAR LE MENU IBNR-->
+    {% if origine == 'ibnr' %}
+      {% if rms_active == 0 %}  
+        <div style="position: relative;">
+          <form class="form-inline save_pdf" action="{% url 'cet:valider_ibnr' %}" method="post" style="margin-bottom:15px;">
+            {% csrf_token %}
+            <input type="hidden" class="hidden" value="{{ name_pdf }}" name="name_pdf">
+            <button type="submit3" class="confirmation btn btn-success" att="#" disabled >VALIDER IBNR</button>
+          </form>
+          <!-- <a href="/cet/sauvegarderpdf" class="btn btn-block btn-primary" 
+            style="width: 150px;margin-top: 20px ; margin-bottom: 20px;">Sauvegarder CET</a> -->
+        </div>
+      {% endif %}
+    {% endif %}
+    <!-- CAS OU ON A GENERER UN PDF EN PASSANT PAR LE MENU PROV EGAL EQUI-->
+    {% if origine == 'prov_egal_equi' %}
+      {% if rms_active == 0 %}  
+        <div style="position: relative;">
+          <form class="form-inline save_pdf" action="{% url 'cet:valider_prov_egal_equi'  %}" method="post" style="margin-bottom:15px;">
+            {% csrf_token %}
+            <input type="hidden" class="hidden" value="{{ name_pdf }}" name="name_pdf">
+            <button type="submit3" class="confirmation btn btn-success" att="{% url 'cet:valider_prov_egal_equi'  %}" disabled >VALIDER PROV. EGAL-EQUI</button>
+          </form>
+          <!-- <a href="/cet/sauvegarderpdf" class="btn btn-block btn-primary" 
+            style="width: 150px;margin-top: 20px ; margin-bottom: 20px;">Sauvegarder CET</a> -->
+        </div>
+      {% endif %}
+    {% endif %}
+
+    {% if error == 0 %}
+    <div style="width: 20% ; margin: 0 auto;  ">
+      {% if messages %}
+        <div class="alert alert-success alert-dismissable"  >
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <h4>	<i class="icon fa fa-check"></i> Message</h4>
+            {% for message in messages %}
+            <li  {% if message.tags %} class=" {{ message.tags }} " {% endif %}> {{ message }} </li>
+            {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+    {% endif %}
+    {% if error == 1 %}
+    <div style="width: 20% ; margin: 0 auto;  ">
+      {% if messages %}
+        <div class="alert alert-danger alert-dismissable"  >
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <h4>	<i class="icon fa fa-ban"></i> Message</h4>
+            {% for message in messages %}
+            <li  {% if message.tags %} class=" {{ message.tags }} " {% endif %}> {{ message }} </li>
+            {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+    {% endif %}
+    <!--
+      MESSAGE WHEN THE PROV. EGAL_EQUI ARE VALIDATED
+    -->
+    {% if validation_egal_equi == 1 %}
+    <div style="width: 20% ; margin: 0 auto;  ">
+      
+        <div class="alert alert-success alert-dismissable"  >
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <h4>	<i class="icon fa fa-check"></i> Message</h4>
+            
+            <li  {% if message.tags %} class="success" {% endif %}> {{ message }} </li>
+            
+        </div>
+    </div>
+    {% endif %}
+    <!--
+      MESSAGE WHEN THE IBNR ARE VALIDATED
+    -->
+    {% if validation_ibnr == 1 %}
+    <div style="width: 20% ; margin: 0 auto;  ">
+      
+        <div class="alert alert-success alert-dismissable"  >
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <h4>	<i class="icon fa fa-check"></i> Message</h4>
+            
+            <li  {% if message.tags %} class="success" {% endif %}> {{ message }} </li>
+            
+        </div>
+    </div>
+    {% endif %}
+
+    
+    {% with 'docs/'|add:name_pdf  as pdf_static %}
+      <embed src="{% static pdf_static %}" type="application/pdf" width="100%" height="830px" />
+    {% endwith %}
+</div>
+
+{% endblock %}
+
+{% block highlight_pdf  %}
+  class="active"
+{% endblock %}
+
+{% block CET_treeview %}
+  active
+{% endblock %}
+
+{% block CET_menu_open %}
+  menu-open
+{% endblock %}
+
+{% block CET_menu_style %}
+  style="display: block;"
+{% endblock %}

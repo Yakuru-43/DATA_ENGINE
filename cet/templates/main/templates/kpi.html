@@ -1,0 +1,1287 @@
+{% extends 'main/templates/index.html' %}
+{% load static %}
+{% block header %}
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+  <h1>
+    Indicateurs de performance (KPI)
+    <small> </small>
+  </h1>
+</section>
+<style>
+  td{
+    font-size: 14px;
+    padding-bottom: 10px;
+  }
+  table{
+    margin: 0 auto ;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="box">
+      <div class="box-header with-border">
+        <!--<h3 class="box-title">ACCEPTATION</h3>-->
+
+      </div><!-- /.box-header -->
+      <div class="box-body">
+        <div class="row">
+          <div class="col-md-6">
+            <!-- Primary box -->
+            <div class=" box box-solid box-info ">
+              <div class="box-header">
+                <h3 class="box-title">TAUX DE RETENTION </h3>
+                
+              </div>
+              <div class="box-body" style="display: block; height: 250px; background-color: #f3ededf3;">
+                <div >
+                  <table>
+                    <tr>
+                      <td>BRANCHE  	&nbsp; </td>
+                      <td>
+                        <SELECT name="branche"  required id="listebranches_tr">
+                          <option value="" disabled >Branche</option>
+                          {% for item in liste_branches %}
+                            <option value="{{item.0}}"> {{item.1}} </option>
+                          {% endfor %}
+                        </SELECT>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+                <div >
+                  <div class="chart-container" style="height: 150px; width: 150px ; margin: 0 auto;" >  
+                      <canvas id="tauxretention" width="150" height="150" style=" pointer-events: none;   "  > </canvas>
+                      <label style="text-align: center;  display: block;" for="myChart"> Taux de rétention </label> 
+                  </div>
+                </div>
+              </div><!-- /.box-body -->
+            </div><!-- /.box -->
+          </div><!-- /.col -->
+
+          <div class="col-md-6">
+            <!-- Primary box -->
+            <div class="box box-solid box-info ">
+              <div class="box-header">
+                <h3 class="box-title">TAUX D'EVOLUTION DU CHIFFRE D'AFFAIRE </h3>
+                
+              </div>
+              <div class="box-body" style="display: block;height: 250px; background-color: #f3ededf3;">
+                <div >
+                  <table>
+                    <tr>
+                      <td>ZONE&nbsp;</td>  
+                      <td><select name="zone"  required id="listezones_teca">
+                          <option value="" disabled >Zone</option>
+                          <option value="1"> ALGERIE </option>
+                          <option value="2"> AFRIQUE ET MONDE ARABE </option>
+                          <option value="3"> AMERIQUE ET ASIE </option>
+                          <option value="4"> EUROPE</option>
+                          <option value="*"> AFFAIRES INTERNATIONALES</option>
+                          <option value="?" selected> TOUTES AFFAIRES </option>
+                        </select>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+                <div >
+                  <div class="chart-container" style="height: 150px; width: 150px ; margin: 0 auto;" >  
+                      <canvas id="tauxevoca" width="150" height="150" style=" pointer-events: none "  > </canvas>
+                      <label style="text-align: center;  display: block;" for="myChart"> Taux d'évolution du Chiffre d'Affaire </label> 
+                  </div>
+              </div>
+
+              </div><!-- /.box-body -->
+            </div><!-- /.box -->
+          </div><!-- /.col -->
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <!-- Primary box -->
+            <div class="box box-solid box-info ">
+              <div class="box-header">
+                <h3 class="box-title">% CHIFFRE D'AFFAIRE </h3>
+                
+              </div>
+              <div class="box-body" style="display: block; height: 300px; background-color: #f3ededf3;">
+                <div >
+                  <table>
+                    <tr>
+                      <td>BRANCHE&nbsp;</td>  
+                      <td>
+                        <SELECT class="pour_ca" name="branche"  required id="listebranches_pca">
+                          <option value="" disabled >Branche</option>
+                          {% for item in liste_branches %}
+                          <option value="{{item.0}}"> {{item.1}} </option>
+                        {% endfor %}
+                        </SELECT>
+                      </td>
+                    </tr>
+                    <!--<tr>
+                      <td> ZONE</td> 
+                      <td><select class="pour_ca"  name="zone"  required id="listezones_pca">
+                          <option value="" disabled >Zone</option>
+                          <option value="1"> ALGERIE </option>
+                          <option value="2"> AFRIQUE ET MONDE ARABE </option>
+                          <option value="3"> AMERIQUE ET ASIE </option>
+                          <option value="4"> EUROPE</option>
+                          <option value="*" selected> AFFAIRES INTERNATIONALES</option>
+                        </select>
+                      </td> 
+                    </tr>-->
+                  </table>
+                </div>
+                <div >
+                    <div class="chart-container" style="height: 220px; width: 500px; margin: 0 auto;" >  
+                        <canvas id="poucentageca"  width="500" height="220" style=" pointer-events: none; "  > </canvas>
+                        <label style="text-align: center;  display: block;" for="myChart"> Pourcentage Chiffre d'Affaire </label> 
+                    </div>
+                </div>
+                
+              </div><!-- /.box-body -->
+            </div><!-- /.box -->
+          </div><!-- /.col -->
+        
+        
+          <div class="col-md-6">
+            <!-- Primary box -->
+            <div class="box box-solid box-info">
+              <div class="box-header">
+                <h3 class="box-title">% CHIFFRE D'AFFAIRE/PORTFOLIO </h3>
+              </div>
+              <div class="box-body" style="display: block; height: 300px; background-color: #f3ededf3;">
+                <div >
+                  <table>
+                    <tr>
+                      <td>BRANCHE  	&nbsp;</td> 
+                      <td><SELECT class="CAPORTFOLIO" name="branche" required id="listebranches_pcap">
+                        <option value="" disabled >Branche</option>
+                        {% for item in liste_branches %}
+                            <option value="{{item.0}}"> {{item.1}} </option>
+                          {% endfor %}
+                      </SELECT>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>ZONE</td>  
+                      <td> 
+                        <select class="CAPORTFOLIO" name="zone"  required id="listezones_pcap">
+                        <option value="" disabled >Zone</option>
+                        <option value="1"> ALGERIE </option>
+                        <option value="2"> AFRIQUE ET MONDE ARABE </option>
+                        <option value="3"> AMERIQUE ET ASIE </option>
+                        <option value="4"> EUROPE</option>
+                        <option value="*" > AFFAIRES INTERNATIONALES</option>
+                        <option value="?" selected> TOUTES ZONES</option>
+                        </select>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+                <div >
+                    <div class="chart-container" style="height: 200px; width: 500px; margin: 0 auto;" >  
+                        <canvas id="pour_ca_portfolio"  style=" pointer-events: none; height: 200px; width: 500px;  "   > </canvas>
+                        <label style="text-align: center;  display: block;" for="myChart"> % CHIFFRE D'AFFAIRE/PORTFOLIO </label> 
+                    </div>
+                </div>
+              </div><!-- /.box-body -->
+            </div><!-- /.box -->
+          </div><!-- /.col -->
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <!-- Primary box -->
+            <div class="box box-solid box-info">
+              <div class="box-header">
+                <h3 class="box-title">% CHIFFRE D'AFFAIRE CESSION OBLIGATOIRE</h3>
+              </div>
+              <div class="box-body" style="height: 300px; background-color: #f3ededf3;"> <!-- e4e4e4ef -->
+                <div >
+                  <table>
+                    <tr>
+                      <td>BRANCHE &nbsp;</td>  
+                      <td>
+                        <SELECT name="branche"  required id="listebranches_pca_co">
+                      <option value="" disabled >Branche</option>
+                        {% for item in liste_branches %}
+                              <option value="{{item.0}}"> {{item.1}} </option>
+                        {% endfor %}
+                        </SELECT>
+                      </td>
+                  </tr>
+                  </table>
+                </div>
+                <div >
+                  <div class="chart-container" style="height: 150px; width: 150px ; margin: 0 auto;" >  
+                      <canvas id="pour_ca_co" width="150" height="150" style=" pointer-events: none;   "  > </canvas>
+                      <label style="text-align: center;  display: block;" for="myChart"> Pourcentage Chiffre d'Affaire Cession Obligatoire </label> 
+                  </div>
+                </div>
+
+              </div><!-- /.box-body -->
+            </div><!-- /.box -->
+          </div>
+
+          <div class="col-md-6">
+            <!-- Primary box -->
+            <div class="box box-solid box-info ">
+              <div class="box-header">
+                <h3 class="box-title">% MARGE DE REASSURANCE</h3>
+                
+              </div>
+              <div class="box-body" style="display: block; height: 300px; background-color: #f3ededf3;">
+                <div >
+                  
+                  <table>
+                    <tr>
+                      <td style="font-size: 14px;">BRANCHE</td>
+                      <td style="font-size: 14px;"><SELECT class="marge_rea" name="branche"  required id="listebranches_marge_rea">
+                        <option value="" disabled >Branche</option>
+                        {% for item in liste_branches %}
+                            <option value="{{item.0}}"> {{item.1}} </option>
+                          {% endfor %}
+                      </SELECT></td>
+                    </tr>
+                    <tr>
+                      <td>ZONE</td> 
+                      <td><select class="marge_rea"  name="zone"  required id="listezones_marge_rea">
+                        <option value="" disabled >Zone</option>
+                        <option value="1"> ALGERIE </option>
+                        <option value="2"> AFRIQUE ET MONDE ARABE </option>
+                        <option value="3"> AMERIQUE ET ASIE </option>
+                        <option value="4"> EUROPE</option>
+                        <option value="*" > AFFAIRES INTERNATIONALES</option>
+                        <option value="?" selected > TOUTES ZONES</option>
+                        </select>
+                     </td>
+                    </tr>
+                    <tr>
+                      <td>SOUSCRIPTION&nbsp;</td> 
+                      <td><select class="marge_rea" name="souscription"  id="listesous_marge_rea"  >
+                        <option value="A" selected> ACCEPTATION  </option>
+                        <option value="B"> RETROCESSION </option>
+                        <option value="C" > NET </option>
+                      </select>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+                <div >
+                    <div class="chart-container" style="height: 150px; width: 150px; margin: 0 auto;" >  
+                        <canvas id="marge_rea" width="150" height="150" style=" pointer-events: none; "  > </canvas>
+                        <label style="text-align: center;  display: block;" for="myChart"> Marge réassurance </label> 
+                    </div>
+                </div>
+                
+              </div><!-- /.box-body -->
+            </div><!-- /.box -->
+          </div><!-- /.col -->
+        </div>
+        <div class="row">
+
+          <div class="col-md-6">
+            <!-- Primary box -->
+            <div class="box box-solid box-info ">
+              <div class="box-header">
+                <h3 class="box-title"> RATIO COMMISSION </h3>
+                
+              </div>
+              <div class="box-body" style="display: block; height: 300px; background-color: #f3ededf3;">
+                <div > 
+                  <table style=" margin: 0 auto;">
+                    <tr>
+                      <td>BRANCHE</td>
+                      <td><SELECT class="ratio_com" name="branche"  required id="listebranches_ratio_com">
+                        <option value="" disabled >Branche</option>
+                        {% for item in liste_branches %}
+                            <option value="{{item.0}}"> {{item.1}} </option>
+                        {% endfor %}
+                      </SELECT></td>
+                    </tr>
+                    <tr>
+                      <td>ZONE</td> 
+                      <td>
+                        <select class="ratio_com"  name="zone"  required id="listezones_ratio_com">
+                          <option value="" disabled >Zone</option>
+                          <option value="1"> ALGERIE </option>
+                          <option value="2"> AFRIQUE ET MONDE ARABE </option>
+                          <option value="3"> AMERIQUE ET ASIE </option>
+                          <option value="4"> EUROPE</option>
+                          <option value="*" > AFFAIRES INTERNATIONALES</option>
+                          <option value="?" selected > TOUTES ZONES</option>
+                        </select>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="padding-bottom: 5px;">SOUSCRIPTION&nbsp;</td>
+                      <td>
+                        <select class="ratio_com" name="souscription"  id="listesous_ratio_com"  >
+                        <option value="A" selected> ACCEPTATION  </option>
+                        <option value="B"> RETROCESSION </option>
+                        <option value="C" > NET </option>
+                        </select>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+                <div >
+                    <div class="chart-container" style="height: 150px; width: 150px; margin: 0 auto;" >  
+                        <canvas id="ratio_com" width="150" height="150" style=" pointer-events: none; "  > </canvas>
+                        <label style="text-align: center;  display: block;" for="myChart"> Ratio Commission </label> 
+                    </div>
+                </div>
+                
+              </div><!-- /.box-body -->
+            </div><!-- /.box -->
+          </div><!-- /.col -->
+
+
+
+          <div class="col-md-6">
+            <!-- Primary box -->
+            <div class="box box-solid box-info ">
+              <div class="box-header">
+                <h3 class="box-title"> RATIO SINISTRALITE </h3>
+                
+              </div>
+              <div class="box-body" style="display: block; height: 300px; background-color: #f3ededf3;">
+                <div >
+                  <table >
+                    <tr>
+                      <td>BRANCHE</td> 
+                      <td><SELECT class="ratio_sin" name="branche"  required id="listebranches_ratio_sin">
+                        <option value="" disabled >Branche</option>
+                        {% for item in liste_branches %}
+                          <option value="{{item.0}}"> {{item.1}} </option>
+                        {% endfor %}
+                      </SELECT></td>
+                    </tr>
+                    <td>ZONE</td> 
+                    <td><select class="ratio_sin"  name="zone"  required id="listezones_ratio_sin">
+                      <option value="" disabled >Zone</option>
+                      <option value="1"> ALGERIE </option>
+                      <option value="2"> AFRIQUE ET MONDE ARABE </option>
+                      <option value="3"> AMERIQUE ET ASIE </option>
+                      <option value="4"> EUROPE</option>
+                      <option value="*" > AFFAIRES INTERNATIONALES</option>
+                      <option value="?" selected > TOUTES ZONES</option>
+                      </select>
+                    </td>
+                    <tr>
+                      <td>SOUSCRIPTION &nbsp;</td> 
+                      <td><select class="ratio_sin" name="souscription"  id="listesous_ratio_sin"  >
+                        <option value="A" selected> ACCEPTATION  </option>
+                        <option value="B"> RETROCESSION </option>
+                        <option value="C"> NET </option>
+                        </select>
+                      </td>
+                    </tr>
+                    </table>
+                </div>
+                <div >
+                    <div class="chart-container" style="height: 150px; width: 150px; margin: 0 auto;" >  
+                        <canvas id="ratio_sin" width="150" height="150" style=" pointer-events: none; "  > </canvas>
+                        <label style="text-align: center;  display: block;" for="myChart"> Ratio sinistralité </label> 
+                    </div>
+                </div>
+                
+              </div><!-- /.box-body -->
+            </div><!-- /.box -->
+          </div><!-- /.col -->
+
+        </div>
+        <div class="row">
+          <div class="col-md-12" >
+            <div class="box box-solid box-info ">
+              <div class="box-header">
+                <h3 class="box-title"> VOLUME AFFAIRES </h3>
+                
+              </div>
+              <div class="box-body" style="display: block; height: auto; ">
+                BRANCHE  <SELECT name="branche" style="margin-bottom: 10px; display: inline;" required id="listebranches_volume_affaire">
+                  <option value="" disabled >Branche</option>
+                  {% for item in liste_branches %}
+                            <option value="{{item.0}}"> {{item.1}} </option>
+                          {% endfor %}
+                </SELECT> 
+    
+                  <div class="chart-container" style=" width: 90% ; margin: 0 auto;" >  
+                      <canvas id="volume_affaire" > </canvas>
+                      <!--<label style="text-align: center;  display: block;" for="myChart"> Marge de réassurance </label> -->
+                  </div>
+                
+              </div><!-- /.box-body -->
+            </div><!-- /.box -->
+            
+
+          </div>
+        </div>
+        
+        <div class="box-footer">
+
+        </div><!-- /.box-footer -->
+      </div><!-- /.box -->
+    </div><!-- /.col -->
+  </div><!-- /.row -->
+
+<script src="{% static 'cet/chart.js-3.2.1/package/dist/chart.min.js' %}"></script>
+<script>
+// TAUX DE RETENTION (tr)
+const listebranches_tr = document.getElementById('listebranches_tr');
+// TAUX EVO CHIFFRE AFFAIRE (teca)
+const listezones_teca = document.getElementById('listezones_teca');
+//POURCENTAGE CA (pca)
+const listebranches_pca = document.getElementById('listebranches_pca');
+const listezones_pca = document.getElementById('listezones_pca');
+//POURCENTAGE CA/PORTFOLIO (pcap)
+const listebranches_pcap = document.getElementById('listebranches_pcap');
+const listezones_pcap = document.getElementById('listezones_pcap');
+//POURCENTAGE CA/CESSION OBLIGATOIRE
+const listebranches_pcaca = document.getElementById('listebranches_pca_co');
+//VOLUME AFFAIRES 
+const listebranches_volume_affaire = document.getElementById('listebranches_volume_affaire');
+//MARGE REASSURANCE
+const listebranches_marge_rea = document.getElementById('listebranches_marge_rea');
+const listezones_marge_rea = document.getElementById('listezones_marge_rea');
+const listesous_marge_rea = document.getElementById('listesous_marge_rea');
+//RATIO COMMISSION
+const listebranches_ratio_com = document.getElementById('listebranches_ratio_com');
+const listezones_ratio_com = document.getElementById('listezones_ratio_com');
+const listesous_ratio_com = document.getElementById('listesous_ratio_com');
+//RATIO SINISTRALITE
+const listebranches_ratio_sin = document.getElementById('listebranches_ratio_sin');
+const listezones_ratio_sin = document.getElementById('listezones_ratio_sin');
+const listesous_ratio_sin = document.getElementById('listesous_ratio_sin');
+
+
+var data = JSON.parse("{{data|escapejs}}");
+
+var ctx  = document.getElementById('tauxretention').getContext('2d');
+var ctx2 = document.getElementById('tauxevoca').getContext('2d');
+var ctx3 = document.getElementById('poucentageca').getContext('2d');
+var ctx4 = document.getElementById('pour_ca_portfolio').getContext('2d');
+var ctx5 = document.getElementById('pour_ca_co').getContext('2d');
+var ctx6 = document.getElementById('volume_affaire').getContext('2d');
+var ctx7 = document.getElementById('marge_rea').getContext('2d');
+var ctx8 = document.getElementById('ratio_com').getContext('2d');
+var ctx9 = document.getElementById('ratio_sin').getContext('2d');
+/*
+****
+****INITIALIZATION OF THE GRAPHS 
+****
+*/
+/*
+* RATIO SINISTRALITE
+*/
+var chart_ratio_sin = new Chart(ctx9, {
+  type: "doughnut",
+  data: {
+    labels: [data["liste_marge_rea"][5][3]+'%'],
+    datasets: [
+      {
+        label: ["# of Votes"],
+        data: [data["liste_marge_rea"][5][9], 100 - data["liste_marge_rea"][5][9]],
+        backgroundColor: ["#04de00","#FFFFFF"],
+        borderWidth: 2
+      }
+    ]
+  },
+  options:{
+    cutout : "80%",
+    circumference: 180,
+    rotation : -90,
+    responsive: false,
+  }
+}
+);
+/*
+* RATIO COMMISSION 
+*/
+var chart_ratio_com = new Chart(ctx8, {
+  type: "doughnut",
+  data: {
+    labels: [data["liste_marge_rea"][5][4]+'%'],
+    datasets: [
+      {
+        label: ["# of Votes"],
+        data: [data["liste_marge_rea"][5][8], 100 - data["liste_marge_rea"][5][8]],
+        backgroundColor: ["#04de00","#FFFFFF"],
+        borderWidth: 2
+      }
+    ]
+  },
+  options:{
+    cutout : "80%",
+    circumference: 180,
+    rotation : -90,
+    responsive: false,
+  }
+}
+);
+
+/*
+* MARGE REASSURANCE
+*/
+var chart_marge_rea = new Chart(ctx7, {
+  type: "doughnut",
+  data: {
+    labels: [data["liste_marge_rea"][5][5]+'%'],
+    datasets: [
+      {
+        label: ["# of Votes"],
+        data: [data["liste_marge_rea"][5][7], 100 - data["liste_marge_rea"][5][7]],
+        backgroundColor: ["#04de00","#FFFFFF"],
+        borderWidth: 2
+      }
+    ]
+  },
+  options:{
+    cutout : "80%",
+    circumference: 180,
+    rotation : -90,
+    responsive: false,
+  }
+}
+);
+/*
+* VOLUME AFFAIRES (LES BARRES)
+*/
+var volume_affaire = new Chart(ctx6, {
+  type: 'bar',
+  data: {
+    labels: ['INTERNATIONAL ACCEP.',
+             'ALGERIE ACCEP.',
+             'AFRIQUE ET MONDE ARABE ACCEP.',
+             'AMERIQUE ET ASIE ACCEP.',
+             'EUROPE ACCEP.',
+             'TOUTES ZONES ACCEP.',
+             'TOUTES ZONES RETRO.',
+             'TOUTES ZONES NET'],
+    datasets: [{
+          label: 'Volume Affaires en DZD',
+          data: [data["liste_marge_rea"][0][6],
+                 data["liste_marge_rea"][1][6], 
+                 data["liste_marge_rea"][2][6], 
+                 data["liste_marge_rea"][3][6], 
+                 data["liste_marge_rea"][4][6], 
+                 data["liste_marge_rea"][5][6], 
+                 data["liste_marge_rea"][6][6], 
+                 data["liste_marge_rea"][7][6]],
+          backgroundColor: [
+            'rgba(255, 99, 132, 1)',
+            'rgba(255, 159, 64, 1)',
+            'rgba(255, 205, 86,1)',
+            'rgba(75, 192, 192, 1)',
+            'rgba(54, 162, 235, 1)',
+            'rgba(153, 102, 255, 1)',
+            'rgba(201, 203, 207, 1)' ,
+            'rgba(143, 203, 227, 1)' ,
+          ],
+          borderColor: [
+            'rgb(255, 99, 132)',
+            'rgb(255, 159, 64)',
+            'rgb(255, 205, 86)',
+            'rgb(75, 192, 192)',
+            'rgb(54, 162, 235)',
+            'rgb(153, 102, 255)',
+            'rgb(201, 203, 207)' ,
+            'rgb(143, 203, 227)' ,
+          ],
+          borderWidth: 1
+        }]
+      },
+  options: {
+    indexAxis: 'y',
+    //responsive: false,
+    scales: {
+      y: {
+        beginAtZero: true
+      }
+    }
+  },
+
+}
+);
+/* 
+* Pourcentage CA/CESSION OBLIGATOIRE
+*/
+var chart_pca_co = new Chart(ctx5, {
+  type: "doughnut",
+  data: {
+    labels: [data["liste_pourcentage_ca"][1][2]+'%'],
+    datasets: [
+      {
+        label: ["# of Votes"],
+        data: [data["liste_pourcentage_ca"][1][2], 100 - data["liste_pourcentage_ca"][1][2]],
+        backgroundColor: ["#04de00","#FFFFFF"],
+        //borderColor: ["rgba(255,99,132,1)","#FFFFFF"],
+        borderWidth: 2
+      }
+    ]
+  },
+  options:{
+    cutout : "80%",
+    circumference: 180,
+    rotation : -90,
+    responsive: false,
+  }
+}
+);
+/*
+* Pourcentage CA/PORTFOLIO
+*/
+var chart_per_ca_port = new Chart(ctx4, {
+    type: "pie",
+  data: {
+    labels: [data["liste_pour_ca_portfolio"][9][3]+'% '+"TRAITE",data["liste_pour_ca_portfolio"][10][3]+'% '+"FAC"],
+    datasets: [
+      {
+        label: ["Traite", "FAC"],
+        data: [data["liste_pour_ca_portfolio"][9][3],  data["liste_pour_ca_portfolio"][10][3]],
+        backgroundColor: ["#04de00","#006fde"],
+       
+        borderWidth: 2
+      }
+    ]
+  },
+  options:{
+    //cutout : "80%",
+    //circumference: 180,
+    //rotation : -90,
+    responsive: false,
+  }
+}
+);
+/*
+* Pourcentage CA
+*/
+var chart_per_ca = new Chart(ctx3, {
+    type: "pie",
+  data: {
+    labels: [  decoder_zone(data["liste_pourcentage_ca"][1][1])+data["liste_pourcentage_ca"][1][3]+'%',
+               decoder_zone(data["liste_pourcentage_ca"][2][1])+data["liste_pourcentage_ca"][2][3]+'%',
+               decoder_zone(data["liste_pourcentage_ca"][3][1])+data["liste_pourcentage_ca"][3][3]+'%',
+               decoder_zone(data["liste_pourcentage_ca"][4][1])+data["liste_pourcentage_ca"][4][3]+'%',
+            ],
+    datasets: [
+      {
+        label: ["# of Votes"],
+        data: [data["liste_pourcentage_ca"][1][3], 
+               data["liste_pourcentage_ca"][2][3],
+               data["liste_pourcentage_ca"][3][3],
+               data["liste_pourcentage_ca"][4][3],
+      ],
+        backgroundColor: ["#04de00","#F4de00","#de0000","#0025de"],
+        //borderColor: ["rgba(255,99,132,1)","#FFFFFF"],
+        borderWidth: 2
+      }
+    ]
+  },
+  options:{
+    //cutout : "80%",
+    //circumference: 180,
+    //rotation : -90,
+    responsive: false,
+  }
+}
+);
+/*
+* TAUX RETENTION
+*/
+var chart_taux_retention = new Chart(ctx, {
+    type: "doughnut",
+  data: {
+    labels: [data["liste_taux_retention"][0][2]+'%'],
+    datasets: [
+      {
+        label: ["# of Votes"],
+        data: [data["liste_taux_retention"][0][1], 100 - data["liste_taux_retention"][0][1]],
+        backgroundColor: ["#04de00","#FFFFFF"],
+        //borderColor: ["rgba(255,99,132,1)","#FFFFFF"],
+        borderWidth: 2
+      }
+    ]
+  },
+  options:{
+    cutout : "80%",
+    circumference: 180,
+    rotation : -90,
+    responsive: false,
+  }
+}
+);
+/*
+* EVOLUTION CA
+*/
+var chart_taux_evo_ca = new Chart(ctx2, {
+    type: "doughnut",
+  data: {
+    labels: [data["liste_evo_ca"][5][2]+'%'],
+    datasets: [
+      {
+        label: ["# of Votes"],
+        data: [data["liste_evo_ca"][5][1], 100 - data["liste_evo_ca"][5][1]],
+        backgroundColor: ["#04de00","#FFFFFF"],
+        //borderColor: ["rgba(255,99,132,1)","#FFFFFF"],
+        borderWidth: 2
+      }
+    ]
+  },
+  options:{
+    cutout : "80%",
+    circumference: 180,
+    rotation : -90,
+    responsive: false,
+  }
+});
+
+/*
+****
+****THE EVENT LISTENERS
+****
+*/
+/*
+* LISTENER FOR TAUX RETENTION
+*/
+listebranches_tr.addEventListener('change', function() {
+    var branche = listebranches_tr.value;
+    var j = 0 ;
+    var i =0 ;
+    var stop = false ;
+    while ( ( i < data["liste_taux_retention"].length  ) && !(stop) ) 
+    {
+
+      if (  ( data["liste_taux_retention"][i][0] == branche  )  )
+          {
+              j= i ;
+              stop =  true ;
+          }  
+      i =i +1 ;
+    }
+    if ( !stop )
+    {
+      chart_taux_retention.data.datasets[0].data = [ 0 ,  100 ]; // Would update DATA
+      chart_taux_retention.data.datasets[0].backgroundColor = ["rgb(255,0,0)","#FFFFFF"]; // Would update COLOR
+      chart_taux_retention.data.labels[0] = 'Donnée non disp.' // Would update the LABEL
+      chart_taux_retention.update(); 
+    }
+    else 
+    {
+      chart_taux_retention.data.datasets[0].data = [  data["liste_taux_retention"][j][1] ,  100- data["liste_taux_retention"][j][1] ]; // Would update DATA
+      if (data["liste_taux_retention"][j][2] <0 ) 
+      {
+          chart_taux_retention.data.datasets[0].backgroundColor = ["rgb(255,0,0)","#FFFFFF"]; // Would update COLOR
+      }
+      else 
+      {
+          chart_taux_retention.data.datasets[0].backgroundColor = ["#04de00","#FFFFFF"]; // Would update COLOR
+      }
+      chart_taux_retention.data.labels[0] = data["liste_taux_retention"][j][2]+'%' // Would update the LABEL
+      chart_taux_retention.update(); 
+    }
+});
+/*
+*LISTENER FOR TAUX EVOLUTION CA
+*/
+listezones_teca.addEventListener('change', function() {
+    var zone = listezones_teca.value;
+    var j =0 ;
+    for(var i = 0; i < data["liste_evo_ca"].length; i++){
+        if (  ( data["liste_evo_ca"][i][0] == zone  )  )
+        {
+            j= i
+        }  
+    }
+    chart_taux_evo_ca.data.datasets[0].data = [  data["liste_evo_ca"][j][1] ,  100- data["liste_evo_ca"][j][1] ]; // Would update DATA
+    if (data["liste_evo_ca"][j][2] <0 ) 
+    {
+        chart_taux_evo_ca.data.datasets[0].backgroundColor = ["rgb(255,0,0)","#FFFFFF"]; // Would update COLOR
+    }
+    else 
+    {
+        chart_taux_evo_ca.data.datasets[0].backgroundColor = ["#04de00","#FFFFFF"]; // Would update COLOR
+    }
+    chart_taux_evo_ca.data.labels[0] = data["liste_evo_ca"][j][2]+'%' // Would update the LABEL
+    chart_taux_evo_ca.update(); 
+});
+/*
+* LISTENER FOR RATIO SINISTRALITE
+*/
+document.querySelectorAll('.ratio_sin').forEach(item => {
+    item.addEventListener('change', event => {
+      var branche = listebranches_ratio_sin.value;
+      var zone = listezones_ratio_sin.value;
+      var sous = listesous_ratio_sin.value;
+      if ( (sous == 'B') || (sous == 'C') )
+      {
+        listezones_ratio_sin.value = '?';
+        zone = '?'
+      } 
+
+      var j = 0 ;
+      var i =0 ;
+      var stop = false ;
+      while ( ( i < data["liste_marge_rea"].length  ) && !(stop) ) 
+      {
+
+        if (  ( data["liste_marge_rea"][i][0] == branche  ) &&  ( data["liste_marge_rea"][i][1] == zone  ) &&  ( data["liste_marge_rea"][i][2] == sous  ))
+            {
+                j= i ;
+                stop =  true ;
+            }  
+        i =i +1 ;
+      }
+      if ( !stop )
+      {
+        chart_ratio_sin.data.datasets[0].data = [ 0 ,  100 ]; // Would update DATA
+        chart_ratio_sin.data.datasets[0].backgroundColor = ["rgb(255,0,0)","#FFFFFF"]; // Would update COLOR
+        chart_ratio_sin.data.labels[0] = 'Donnée non disp.' // Would update the LABEL
+        chart_ratio_sin.update(); 
+      }
+      else 
+      {
+        chart_ratio_sin.data.datasets[0].data = [  data["liste_marge_rea"][j][9] ,  100- data["liste_marge_rea"][j][9] ]; // Would update DATA
+      
+        if (data["liste_marge_rea"][j][3] <0 ) 
+        {
+          chart_ratio_sin.data.datasets[0].backgroundColor = ["rgb(255,0,0)","#FFFFFF"]; // Would update COLOR
+        }
+        else 
+        {
+          chart_ratio_sin.data.datasets[0].backgroundColor = ["#04de00","#FFFFFF"]; // Would update COLOR
+        }
+        chart_ratio_sin.data.labels[0] = data["liste_marge_rea"][j][3]+'%' // Would update the LABEL
+        chart_ratio_sin.update(); 
+      }
+
+    })
+});
+/*
+* LISTENER FOR RATIO COMMISSION
+*/
+document.querySelectorAll('.ratio_com').forEach(item => {
+    item.addEventListener('change', event => {
+      var branche = listebranches_ratio_com.value;
+      var zone = listezones_ratio_com.value;
+      var sous = listesous_ratio_com.value;
+      if ( (sous == 'B') || (sous == 'C') )
+      {
+        listezones_ratio_com.value = '?';
+        zone = '?'
+      } 
+      var j = 0 ;
+      var i =0 ;
+      var stop = false ;
+      while ( ( i < data["liste_marge_rea"].length  ) && !(stop) ) 
+      {
+
+        if (  ( data["liste_marge_rea"][i][0] == branche  ) &&  ( data["liste_marge_rea"][i][1] == zone  ) &&  ( data["liste_marge_rea"][i][2] == sous  ))
+            {
+                j= i ;
+                stop =  true ;
+            }  
+        i =i +1 ;
+      }
+      if ( !stop )
+      {
+        chart_ratio_com.data.datasets[0].data = [ 0 ,  100 ]; // Would update DATA
+        chart_ratio_com.data.datasets[0].backgroundColor = ["rgb(255,0,0)","#FFFFFF"]; // Would update COLOR
+        chart_ratio_com.data.labels[0] = 'Donnée non disp.' // Would update the LABEL
+        chart_ratio_com.update(); 
+      }
+      else 
+      {
+        chart_ratio_com.data.datasets[0].data = [  data["liste_marge_rea"][j][8] ,  100- data["liste_marge_rea"][j][8] ]; // Would update DATA
+      
+        if (data["liste_marge_rea"][j][3] <0 ) 
+        {
+          chart_ratio_com.data.datasets[0].backgroundColor = ["rgb(255,0,0)","#FFFFFF"]; // Would update COLOR
+        }
+        else 
+        {
+          chart_ratio_com.data.datasets[0].backgroundColor = ["#04de00","#FFFFFF"]; // Would update COLOR
+        }
+        chart_ratio_com.data.labels[0] = data["liste_marge_rea"][j][4]+'%' // Would update the LABEL
+        chart_ratio_com.update(); 
+      }
+
+    })
+});
+/*
+* LISTENER FOR MARGE REASSURANCE
+*/
+document.querySelectorAll('.marge_rea').forEach(item => {
+    item.addEventListener('change', event => {
+      var branche = listebranches_marge_rea.value;
+      var zone = listezones_marge_rea.value;
+      var sous = listesous_marge_rea.value;
+      if ( (sous == 'B') || (sous == 'C') )
+      {
+        listezones_marge_rea.value = '?';
+        zone = '?'
+      } 
+      var j = 0 ;
+      var i =0 ;
+      var stop = false ;
+      while ( ( i < data["liste_marge_rea"].length  ) && !(stop) ) 
+      {
+
+        if (  ( data["liste_marge_rea"][i][0] == branche  ) &&  ( data["liste_marge_rea"][i][1] == zone  ) &&  ( data["liste_marge_rea"][i][2] == sous  ))
+            {
+                j= i ;
+                stop =  true ;
+            }  
+        i =i +1 ;
+      }
+      if ( !stop )
+      {
+        chart_marge_rea.data.datasets[0].data = [ 0 ,  100 ]; // Would update DATA
+        chart_marge_rea.data.datasets[0].backgroundColor = ["rgb(255,0,0)","#FFFFFF"]; // Would update COLOR
+        chart_marge_rea.data.labels[0] = 'Donnée non disp.' // Would update the LABEL
+        chart_marge_rea.update(); 
+      }
+      else 
+      {
+        chart_marge_rea.data.datasets[0].data = [  data["liste_marge_rea"][j][7] ,  100- data["liste_marge_rea"][j][7] ]; // Would update DATA
+      
+        if (data["liste_marge_rea"][j][3] <0 ) 
+        {
+          chart_marge_rea.data.datasets[0].backgroundColor = ["rgb(255,0,0)","#FFFFFF"]; // Would update COLOR
+        }
+        else 
+        {
+          chart_marge_rea.data.datasets[0].backgroundColor = ["#04de00","#FFFFFF"]; // Would update COLOR
+        }
+        chart_marge_rea.data.labels[0] = data["liste_marge_rea"][j][5]+'%' // Would update the LABEL
+        chart_marge_rea.update(); 
+      }
+
+    })
+});
+/*
+* LISTENER ON BRANCHES OF % CA 
+*/
+document.querySelectorAll('.pour_ca').forEach(item => {
+    item.addEventListener('change', event => {
+      var branche = listebranches_pca.value;
+      //var zone = listezones_pca.value;
+
+      var j = 0 ;
+      var i =0 ;
+      var stop = false ;
+      while ( ( i < data["liste_pourcentage_ca"].length  ) && !(stop) ) 
+      {
+
+        if (  ( data["liste_pourcentage_ca"][i][0] == branche  ) )
+            {
+                j= i ;
+                stop =  true ;
+            }  
+        i =i +1 ;
+      }
+      console.log("ici le j "+j);
+      if ( !stop )
+      {//IE LA BRANCHE N'EXISTE PAS DANS NOTRE LITSE
+        chart_per_ca.data.datasets[0].data = [ 0 ]; // Would update DATA
+        chart_per_ca.data.datasets[0].backgroundColor = ["rgb(255,0,0)","#FFFFFF"]; // Would update COLOR
+        chart_per_ca.data.labels = ['Donnée non disp.'] // Would update the LABEL
+        chart_per_ca.update(); 
+      }
+      else 
+      {
+        //IE LA BRANCHE EXISTE DANS NOTRE LITSE
+        //CHERCHER LA DONNEE POUR LA ZONE ALGERIE 
+        var donne_algerie = 0 ;
+        var i_algerie = 0 ;
+        var j_algerie = 0 ;
+        var stop_algerie = false ;
+        while ( ( i_algerie < data["liste_pourcentage_ca"].length  ) && !(stop_algerie) ) 
+        {
+          if (  ( data["liste_pourcentage_ca"][i_algerie][0] == branche  ) && ( data["liste_pourcentage_ca"][i_algerie][1] == '1'  )  )
+              {
+                  j_algerie= i_algerie ;
+                  stop_algerie =  true ;
+              }  
+              i_algerie =i_algerie +1 ;
+        }
+
+        if ( !stop_algerie )
+        {
+          donne_algerie = 0;
+        }
+        else 
+        {
+          donne_algerie = data["liste_pourcentage_ca"][j_algerie][3];
+        }
+        console.log("le j algerie "+j_algerie+" la donnée"+donne_algerie);
+        
+        //CHERCHER LA DONNEE POUR LA ZONE AFRIQUE ET MONDE ARABE 
+        var donne_afrique = 0 ;
+        var i_afrique = 0 ;
+        var j_afrique = 0 ;
+        var stop_afrique = false ;
+        while ( ( i_afrique < data["liste_pourcentage_ca"].length  ) && !(stop_afrique) ) 
+        {
+          if (  ( data["liste_pourcentage_ca"][i_afrique][0] == branche  ) && ( data["liste_pourcentage_ca"][i_afrique][1] == '2'  )  )
+              {
+                  j_afrique= i_afrique ;
+                  stop_afrique =  true ;
+              }  
+              i_afrique =i_afrique +1 ;
+        }
+
+        if ( !stop_afrique )
+        {
+          donne_afrique = 0;
+        }
+        else 
+        {
+          donne_afrique = data["liste_pourcentage_ca"][j_afrique][3];
+        }
+        console.log("le j afrique "+j_afrique+" la donnée"+donne_afrique);
+
+        //CHERCHER LA DONNEE POUR LA ZONE AMERIQUE ET ASIE  
+        var donne_amerique = 0 ;
+        var i_amerique = 0 ;
+        var j_amerique = 0 ;
+        var stop_amerique = false ;
+        while ( ( i_amerique < data["liste_pourcentage_ca"].length  ) && !(stop_amerique) ) 
+        {
+          if (  ( data["liste_pourcentage_ca"][i_amerique][0] == branche  ) && ( data["liste_pourcentage_ca"][i_amerique][1] == '3'  )  )
+              {
+                  j_amerique= i_amerique ;
+                  stop_amerique =  true ;
+              }  
+              i_amerique =i_amerique +1 ;
+        }
+
+        if ( !stop_amerique )
+        {
+          donne_amerique = 0;
+        }
+        else 
+        {
+          donne_amerique = data["liste_pourcentage_ca"][j_amerique][3];
+        }
+        console.log("le j amerique "+j_amerique+" la donnée"+donne_amerique);
+
+        // CHERCHER LA DONNEE POUR LA ZONE EUROPE
+        var donne_europe = 0 ;
+        var i_europe = 0 ;
+        var j_europe = 0 ;
+        var stop_europe = false ;
+        while ( ( i_europe < data["liste_pourcentage_ca"].length  ) && !(stop_europe) ) 
+        {
+          if (  ( data["liste_pourcentage_ca"][i_europe][0] == branche  ) && ( data["liste_pourcentage_ca"][i_europe][1] == '4'  )  )
+              {
+                  j_europe= i_europe ;
+                  stop_europe =  true ;
+              }  
+              i_europe =i_europe +1 ;
+        }
+
+        if ( !stop_europe )
+        {
+          donne_europe = 0;
+        }
+        else 
+        {
+          donne_europe = data["liste_pourcentage_ca"][j_europe][3];
+        }
+        console.log("le j europe "+j_europe+" la donnée"+donne_europe);
+        /*
+        //FIN DE LA RECHERCHE
+        */
+        chart_per_ca.data.datasets[0].data = [  donne_algerie ,  donne_afrique , donne_amerique , donne_europe ]; // Would update DATA
+        /*
+        if (data["liste_pourcentage_ca"][j][3] <0 ) 
+        {
+          chart_per_ca.data.datasets[0].backgroundColor = ["rgb(255,0,0)","#FFFFFF"]; // Would update COLOR
+        }
+        else 
+        {
+          chart_per_ca.data.datasets[0].backgroundColor = ["#04de00","#F4de00","#de0000","#0025de"]; // Would update COLOR
+        }
+        */
+        chart_per_ca.data.labels = [
+               'ALGERIE '+donne_algerie+'%',
+               'AFRIQUE ET MONDE ARABE '+donne_afrique+'%',
+               'AMERIQUE ET ASIE '+donne_amerique+'%',
+               'EUROPE '+donne_europe+'%',
+        ]
+        chart_per_ca.data.datasets[0].backgroundColor = ["#04de00","#F4de00","#de0000","#0025de"]; // Would update COLOR
+        chart_per_ca.update(); 
+      }
+
+    })
+});
+
+/*
+* LISTENER ON BRANCHES OF POURCENTAGE CA/PORTFOLIO
+*/
+document.querySelectorAll('.CAPORTFOLIO').forEach(item => {
+    item.addEventListener('change', event => {
+    console.log("Test");
+    var branche = listebranches_pcap.value;
+    var zone = listezones_pcap.value;
+    var j = 0 ;
+    var i =0 ;
+    var stop = false ;
+    while ( ( i < data["liste_pour_ca_portfolio"].length  ) && !(stop) ) 
+    {
+
+      if (  ( data["liste_pour_ca_portfolio"][i][0] == branche  ) &&  ( data["liste_pour_ca_portfolio"][i][1] == zone  ))
+          {
+              j= i ;
+              stop =  true ;
+          }  
+      i =i +1 ;
+    }
+    if ( !stop )
+    {
+      chart_per_ca_port.data.datasets[0].data = [ 0 ,  0 ]; // Would update DATA
+      chart_per_ca_port.data.datasets[0].backgroundColor = ["rgb(0,255,0)","rgb(0,0,255)"]; // Would update COLOR
+      chart_per_ca_port.data.labels[0] = 'Donnée non disp.'; // Would update the LABEL
+      chart_per_ca_port.data.labels[1] = 'Donnée non disp.'; // Would update the LABEL
+      chart_per_ca_port.update(); 
+    }
+    else 
+    {
+      chart_per_ca_port.data.datasets[0].backgroundColor = ["rgb(0,255,0)","rgb(0,0,255)"]; // Would update COLOR=
+      var valeur_traite = data["liste_pour_ca_portfolio"][j][3];
+      var valeur_fac = 0;
+      if (valeur_traite  < 100)
+      {
+        valeur_fac = data["liste_pour_ca_portfolio"][j+1][3] ;
+      }
+      chart_per_ca_port.data.labels[0]=valeur_traite +'%'+'TRAITE';
+      chart_per_ca_port.data.labels[1]=valeur_fac +'%'+'FAC';
+      chart_per_ca_port.data.datasets[0].data = [  valeur_traite,  valeur_fac ]; // Would update DATA
+      chart_per_ca_port.data.datasets[0].backgroundColor = ["rgb(0,255,0)","#006fde"]; // Would update COLOR
+      chart_per_ca_port.update(); 
+    }
+  })
+});
+/*
+* LISTENER ON BRANCHES OF POURCENTAGE CA/CESSION OBLIGATOIRE
+*/
+listebranches_pcaca.addEventListener('change', function() {
+    var branche = listebranches_pcaca.value;
+    var j = 0 ;
+    var i =0 ;
+    var stop = false ;
+    let test = new Array();
+    while ( ( i < data["liste_pourcentage_ca"].length  ) && !(stop) ) 
+    {
+      test.push([data["liste_pourcentage_ca"][i][0] , data["liste_pourcentage_ca"][i][1] ,data["liste_pourcentage_ca"][i][2] ]);
+      if (  ( data["liste_pourcentage_ca"][i][0] == branche  )  && ( data["liste_pourcentage_ca"][i][1] == "1" ) )
+          {
+              j= i ;
+              stop =  true ;
+          }  
+      i =i +1 ;
+    } 
+    if ( !stop )
+    {
+      chart_pca_co.data.datasets[0].data = [ 0 ,  100 ]; // Would update DATA
+      chart_pca_co.data.datasets[0].backgroundColor = ["rgb(255,0,0)","#FFFFFF"]; // Would update COLOR
+      chart_pca_co.data.labels[0] = 'Donnée non disp.' // Would update the LABEL
+      chart_pca_co.update(); 
+    }
+    else 
+    {
+      chart_pca_co.data.datasets[0].data = [  data["liste_pourcentage_ca"][j][2] ,  100- data["liste_pourcentage_ca"][j][2] ]; // Would update DATA
+      if (data["liste_pourcentage_ca"][j][2] <0 ) 
+      {
+        chart_pca_co.data.datasets[0].backgroundColor = ["rgb(255,0,0)","#FFFFFF"]; // Would update COLOR
+      }
+      else 
+      {
+        chart_pca_co.data.datasets[0].backgroundColor = ["#04de00","#FFFFFF"]; // Would update COLOR
+      }
+      chart_pca_co.data.labels[0] = data["liste_pourcentage_ca"][j][2]+'%' // Would update the LABEL
+      chart_pca_co.update(); 
+    }
+});
+/*
+* LISTENER ON BRANCHES OF VOLUME AFFAIRES
+*/
+listebranches_volume_affaire.addEventListener('change', function() {
+    var branche = listebranches_volume_affaire.value;
+    var i =0 ;
+    var continuer = true ;
+    let res = new Array();
+    while ( ( i < data["liste_marge_rea"].length  ) && (continuer) ) 
+    {
+      if (  ( data["liste_marge_rea"][i][0] == branche  )  )
+          {
+            res.push([data["liste_marge_rea"][i][0] , data["liste_marge_rea"][i][1] ,data["liste_marge_rea"][i][2] ,data["liste_marge_rea"][i][6] ]);
+          }
+      
+      if ( (i>0) && ( data["liste_marge_rea"][i-1][0] == branche  ) && ( data["liste_marge_rea"][i][0] != branche  ) )  
+      {
+        continuer = false;
+      }
+      i =i +1 ;
+    }
+    let res_data = new Array();
+    let res_label = new Array();
+    for (var i=0 ; i < res.length ; i++)
+    {
+      res_data.push(res[i][3]) ;
+    }
+    for (var i=0 ; i < res.length ; i++)
+    {
+      res_label.push(decoder_zone(res[i][1]) +decoder_souscription(res[i][2]) ) ;
+    }
+    if ( continuer )
+    {
+      volume_affaire.data.datasets[0].data = [ 0 ]; // Would update DATA
+      volume_affaire.data.labels = ['Donnée non disp.'] // Would update the LABEL
+      volume_affaire.update(); 
+    }
+    else 
+    {
+      volume_affaire.data.datasets[0].data = res_data; // Would update DATA
+      volume_affaire.data.labels = res_label // Would update the LABEL
+      volume_affaire.update(); 
+    }
+
+});
+
+function decoder_zone( zone){
+      if (zone =="*") return "INTERNATIONAL " ;
+      if (zone =="1") return "ALGERIE " ;
+      if (zone =="2") return "AFRIQUE ET MONDE ARABE " ;
+      if (zone =="3") return "AMERIQUE ASIE  " ;
+      if (zone =="4") return "EUROPE " ;
+      if (zone =="?") return "TOUTES ZONES " ;
+  };
+
+function decoder_souscription( zone){
+      if (zone =="A") return "ACCEP. " ;
+      if (zone =="B") return "RETRO. " ;
+      if (zone =="C") return "NET " ;
+  };
+
+</script>
+
+{% endblock %}s
+
+{% block highlight_kpi %}
+class="active"
+{% endblock %}
+{% block dashbord_treeview %}
+active
+{% endblock %}
+{% block dashbord_menu_open %}
+menu-open
+{% endblock %}
+{% block dashbord_menu_style %}
+style="display: block;"
+{% endblock %}

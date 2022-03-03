@@ -1,0 +1,124 @@
+{% extends 'main/templates/index.html' %}
+{% load static %}
+{% block header %}
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+  <h1>
+   SUPER MANAGEMENT
+    <small> </small>
+  </h1>
+
+</section>
+
+{% endblock %}
+{% block meta %}
+<!--===============================================================================================-->
+  <link rel="stylesheet" type="text/css" href=" {% static 'cet/table_template/vendor/animate/animate.css' %} " >
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href=" {% static 'cet/table_template/vendor/select2/select2.min.css' %} " >
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href=" {% static 'cet/table_template/vendor/perfect-scrollbar/perfect-scrollbar.css' %} " >
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href=" {% static 'cet/table_template/css/util.css' %} "  >
+	<link rel="stylesheet" type="text/css" href=" {% static 'cet/table_template/css/main.css' %} " >
+<!--===============================================================================================-->
+<style>
+
+</style>
+{% endblock %}
+{% block content %}
+    <div class="container">
+        <div class="row">
+          <div class="col-md-13">
+            <div class="box box-solid">
+              <div class="box-header with-border">
+                <h3 class="box-title">Actions spéciales</h3>
+              </div><!-- /.box-header -->
+              
+              <table>
+                <tr>
+                  <td style="width: 250px;">
+                    <label for="btn_next_cet" style="margin-left: 10px;"> PASSER AU CET SUIVANT</label>
+                  </td>
+                  <td >
+                    <form action="{% url 'cet:cet_suivant' %}" method="get" style="margin-bottom: 0px;">
+                      <button att="{% url 'cet:cet_suivant' %}" id="btn_next_cet" name="btn_next_cet" class="btn btn-block btn-success btn-xs" style="width:150px" id="btn_cet_suiv" att="{% url 'cet:bloquer_rms' %}"> Passer au cet suivant</button> 
+                    </form>
+                  </td>
+                </tr>
+              </table>
+              <p style="color: red; margin-left:10px;">Ne pas oublier d'ajouter le cet dans la table DMY.LISTE_CET pour les extractions Excel</p>
+              <h4 style="margin-left:10px;">CONTENU DE LA TABLE DMY.CET_PARAMETRE</h4>
+              <div class="box-body">
+                <div class="container-table110" >
+                  <div class="wrap-table110">
+                      <div class="table100 ver1 m-b-110" style="padding-top: 0px;">
+                            <table>
+                              <thead>
+                                <tr>
+                                  <th>DATE DEBUT EXERCICE</th>
+                                  <th>DATE REC</th>
+                                  <th>EXERCICE</th>
+                                  <th>CET OUVERTURE</th>
+                                  <th>UNDERWRITING YEAR</th>
+                                  <th>CET EN COURS</th>
+                                  <th>IS RMS ACTIVE</th>
+                                </tr>
+                              </thead>
+                              
+                              <tr>
+                                <td>{{ DATE_DEBUT_EXERCICE }} </td>
+                                <td>{{ DATE_REC }} </td>
+                                <td>{{ EXERCICE }} </td>
+                                <td>{{ CET_OUVERTURE }} </td>
+                                <td>{{ UNDERWRITING_YEAR }} </td>
+                                <td>{{ CET_ENCOURS }} </td>
+                                <td>{{ IS_RMS_ACTIVE }} </td>
+                              </tr>
+                            </table>
+                        </div>
+                    </div>
+                  </div>
+              <!-- /.box-body -->
+            </div><!-- /.box -->
+          </div><!-- ./col -->
+                      
+          <div class="col-sm-4">
+          </div>
+        </div>
+       
+{% endblock %}
+
+{% block script %}
+$('#btn_cet_suiv').confirm({
+  theme: 'supervan',
+  animation: 'top',
+  closeAnimation: 'bottom',
+  title: 'Attention',
+  content: 'Voulez vous vraiment effectuer cette action ?',
+  buttons: {
+      Confimer: {
+      btnClass: 'btn-blue',
+      action : function () {
+        location.href = this.$target.attr('att');
+      },
+    },
+      Annuler:{ 
+      btnClass: 'btn-red',
+    }   
+  }
+});
+{% endblock %}
+
+
+{% block highlight_super_management %} class="active" {% endblock %}
+{% block CET_treeview %}
+  active
+  {% endblock %}
+  {% block CET_menu_open %}
+  menu-open
+  {% endblock %}
+  {% block CET_menu_style %}
+  style="display: block;"
+  {% endblock %}

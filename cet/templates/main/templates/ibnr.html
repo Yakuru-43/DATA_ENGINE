@@ -1,0 +1,311 @@
+{% extends 'main/templates/index.html' %}
+{% load static %}
+{% load humanize %}
+{% block meta %}
+
+
+<style>
+    label {
+    text-align: right;
+    clear: both;
+    float:left;
+    margin-right:15px;
+}
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+</style>
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href=" {% static 'cet/table_template/vendor/animate/animate.css' %} " >
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href=" {% static 'cet/table_template/vendor/select2/select2.min.css' %} " >
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href=" {% static 'cet/table_template/vendor/perfect-scrollbar/perfect-scrollbar.css' %} " >
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href=" {% static 'cet/table_template/css/util.css' %} "  >
+	<link rel="stylesheet" type="text/css" href=" {% static 'cet/table_template/css/main.css' %} " >
+<!--===============================================================================================-->
+
+{% endblock %}
+
+{% block header %}
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        IBNR
+        <small>Vous pouvez renseigner les taux IBNR. </small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="/cet"><i class="fa fa-dashboard"></i> CET</a></li>
+        <li class="active">IBNR</li>
+    </ol>
+</section>
+
+{% endblock %}
+
+
+{% block content %}
+
+{% if condition %}
+
+<div class="container" style="margin-top: 30px; width: 100%;">
+    <div class="row">
+        <div class="col-md-17">
+            <div class="nav-tabs-custom">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a href="#tab_1" data-toggle="tab">Insertion</a></li>
+                    <!--<li><a href="#tab_2" data-toggle="tab">Visualisation</a></li>-->
+                </ul>
+                <div class="tab-content">
+                    
+                    <div class="tab-pane active" id="tab_1">
+                        <!-- INSERTION CONTENT -->
+                        BRANCHE
+                        <form class='myform' style="display: inline-block;" action="{% url 'cet:view_ibnr'  %}" method="get">
+                        <SELECT name="branche" style="margin-bottom: 10px; display: inline;" required
+                            id="listebranches">
+                            <option value="" disabled >Branche</option>
+                            {% for branche_element in liste_branches %}
+                            <option value="{{ branche_element }}"{% if branche ==  branche_element  %} selected {% endif %}> {{ branche_element }} </option>
+                            {% endfor %}
+                            
+                        </SELECT>
+                        <button type="submit5" class="btn btn-block btn-success btn-xs" 
+                            style="width: 100px; 
+                            display: inline; 
+                            margin-bottom: 2px; 
+                            margin-left: 10px;" 
+                            id="btnFiltrer01"  value ="Selectionner"> Selectionner</button>
+                        </form > 
+                        <form class="reset_form" style="float: right;" action="{% url 'cet:ibnr_reinitialiser'  %}" method="get">
+                            <input type="hidden" name ="branche_hidden" value="{{branche}}">
+                            <button id="ibnr_reset" style="width: 100px;  margin-right: 0px; margin-left: auto;" type="submit_reset" class="btn btn-block btn-success btn-xs">Réinitialiser</button>
+                        </form>
+                        <!-- /.box-body -->
+                    <form class="save_form" action="{% url 'cet:ibnr_save'  %}" method="get">
+                        <h4 style="margin-top: 0px;  ">IBNR pour la branche : {{branche}}</h4>
+                            {% if branche == 'INTERNATIONALE' %}
+                                <div>
+                                    <table>
+                                        <tbody>
+                                            <tr >
+                                                <td>
+                                                <div >
+                                                    <label for="checkSous" >&nbspType souscription :</label>
+                                                    <fieldset id="checkSous">
+                                                        <label for="boxTraite">Traité</label><input id="boxTraite" type="checkbox" name="souscription" {% if traite == "1" %} checked {% endif %} value="traite" /> 
+                                                        <label for="boxFac">Facultative</label> <input id="boxFac" type="checkbox" name="souscription" {% if fac == "1" %} checked {% endif %} value="fac" style="margin-top: 9px;" />  
+                                                    </fieldset>
+                                                </div>
+                                                <input id="conditionFil" type="hidden" value="1">
+                                                </td>
+                                                <td>
+                                                <div >
+                                                    <label for="checkZone" >Zone :</label>
+                                                    <fieldset id="checkZone" >
+                                                        <label for="zone_afrique">Afrique</label><input id="zone_afrique" type="checkbox" name="zone" value="afrique" {% if zone_afrique == "1" %} checked {% endif %} /> 
+                                                        <label for="zone_europe">Europe</label><input id="zone_europe" type="checkbox" name="zone" value="europe" {% if zone_europe == "1" %} checked {% endif %} /> 
+                                                        <label for="zone_amerique_asie">Amérique et Asie</label><input id="zone_amerique_asie" type="checkbox" name="zone" value="asie_amerique" style="margin-top: 9px;" {% if zone_amerique_asie == "1" %} checked {% endif %} /> 
+                                                    </fieldset>
+                                                </div>
+                                            </td>
+                                            </tr>
+                                        </tbody>
+                                </table>
+                                </div>
+                            
+                                {% else %}
+                                <div>
+                                <input id="conditionFil" type="hidden" value="2">
+                                <label for="checkSous" >Type souscription :</label>
+                                <fieldset id="checkSous">
+                                    <label for="boxTraite">Traité</label><input id="boxTraite" type="checkbox" name="souscription" {% if traite == "1" %} checked {% endif %} value="traite" /> 
+                                    <label for="boxFac">Facultative</label> <input id="boxFac" type="checkbox" name="souscription" {% if fac == "1" %} checked {% endif %} value="fac" style="margin-top: 9px;" />  
+                                </fieldset>
+                            </div>
+                        
+                            {% endif %}
+                          
+                        <input id ="branche_hidden" type="hidden" name ="branche_hidden" value="{{branche}}">
+                    
+                        <!-- TABLEAU CONTENANT LES IBNR -->
+                        <div class="container-table120" >
+                            <div class="wrap-table120">
+                                <div class="table100 ver1 m-b-110">
+                                    <div class="table100-head">
+                                        <table >
+                                            <thead>
+                                                <tr class="row100 head">
+                                                    <th class="cell100 column1">Année souscription</th>
+                                                    <th class="cell100 column2">SAP avant IBNR</th>
+                                                    <th class="cell100 column3">IBNR</th>
+                                                    <th class="cell100 column4">SAP après IBNR</th>
+                                                    <th class="cell100 column5">Taux</th>
+                                                </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
+                
+                                    <div>
+                                        <table class="table100-body ">
+                                            <tbody>
+                                                {% for ligne in liste_sap_display %}
+                                                <tr class="row120 body"  >
+                                                    <td class="cell100 column1">
+                                                        {% if ligne.1 == "1111" %} 
+                                                            Exercices antérieurs
+                                                        {% elif ligne.1 == "9999" %}
+                                                            Tous exercices
+                                                        {% else %}
+                                                            {{ligne.1}}
+                                                        {% endif %}
+                                                    </td>
+                                                    <td id="col1_ligne{{ forloop.counter }}" class="cell100 column2">{{ligne.2|intcomma}}</td>
+                                                    <td id="col2_ligne{{ forloop.counter }}" class="cell100 column3">{{ligne.3|intcomma}}</td>
+                                                    <td id="col3_ligne{{ forloop.counter }}" class="cell100 column4">{{ligne.4|intcomma}}</td>
+                                                    <td class="cell100 column5">
+                                                        <input id="col4_ligne{{ forloop.counter }}" type="number" step="0.0000000001"   name="{{ forloop.counter }}" value="{{ligne.5}}" style="box-sizing: border-box; width: 100%;">
+                                                        <input type="hidden" name="year_{{ forloop.counter }}" value="{{ligne.1}}">
+                                                    </td>
+                                                </tr>
+                                                {% endfor %}
+                                                                                
+                                            </tbody>
+                                            {% if branche != 'INTERNATIONALE' %}
+                                            <tfoot>
+                                                <tr>
+                                                  <td id="total" class="cell100 column1"><b>Total :</b></td>
+                                                  <td id="total1" class="cell100 column2"><b>{{totale_avant_ibnr_display|intcomma}}</b></td>
+                                                  <td id="total2" class="cell100 column3"><b>{{totale_ibnr_display|intcomma}}</b></td>
+                                                  <td id="total3" class="cell100 column4"><b>{{totale_apres_ibnr_display|intcomma}}</b></td>
+                                                  
+                                                </tr>
+                                               </tfoot>
+                                            {% endif %}
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                          
+                          <button style="width: 100px;  margin-right: 0px; margin-left: auto;" type="submit1" class="btn btn-block btn-success btn-xs">Sauvegarder</button>
+                        </form > 
+                    </div>
+                    </div><!-- /.tab-pane -->
+                </div><!-- /.tab-content -->
+            </div><!-- nav-tabs-custom -->
+        </div><!-- ./col -->
+
+        <div class="col-sm-4">
+        </div>
+    </div>
+
+
+		
+
+
+
+    {% else %}
+    <p>Vous devez d'abord insérer le CET.</p>
+
+    
+    {% endif %}
+
+
+
+    <script >
+        /*var data = JSON.parse("{{data|escapejs}}");
+        var table = document.getElementById("myTable1");
+        var new_tbody = document.createElement('tbody');
+        const listebranches = document.getElementById('listebranches');
+        const buttonFiltrer = document.getElementById('btnFiltrer');
+
+        function tableCreate(){
+            var branche = listebranches.value;
+            var body = document.getElementById('test');
+                tbl  = document.createElement('table');
+            tbl.id='test01'
+            tbl.style.width  = '100%';
+            tbl.style.border = '1px solid black';
+            var tr = tbl.insertRow();
+            var td = tr.insertCell();
+            td.innerHTML = "Année souscription".bold();
+            var td = tr.insertCell();
+            td.innerHTML = "SAP avant IBNR".bold();
+            var td = tr.insertCell();
+            td.innerHTML = "IBNR".bold();
+            var td = tr.insertCell();
+            td.innerHTML = "SAP après IBNR".bold();
+            var td = tr.insertCell();
+            td.innerHTML = "Taux de majoration".bold();
+            for(var i = 0; i < 16; i++){
+                var tr = tbl.insertRow();
+                for(var j = 0; j < 5; j++){
+                        var i2 =0 ;
+                        var i3 =1 ;
+                        while ((i2< data["liste_sap"].length) && (i3 ==1 ) )
+                        {   
+                            if (branche == data["liste_sap"][i2][1]) {
+                                i3= 0 ;
+                            }
+                            i2 = i2+1;
+                        }   
+                        var td = tr.insertCell();
+                        if (j+2 == 6 )
+                        {
+                            myInput = document.createElement('input');
+                            myInput.setAttribute('type', 'number');
+                            myInput.setAttribute('style', "box-sizing: border-box; width: 100%;")
+                            myInput.setAttribute('value', data["liste_sap"][i+i2-1][6]);
+                            td.append(myInput)
+                        }
+                        else {
+                            td.innerHTML = data["liste_sap"][i+i2 -1][j+2];
+                        }                    
+                        td.style.border = '1px solid black';
+                }
+            }
+            body.appendChild(tbl);
+        }
+        buttonFiltrer.addEventListener('click',function () {
+                       
+            var element = document.getElementById("test01");
+            if (element != null)
+            {
+                element.remove();
+            }
+            
+            tableCreate();
+        }
+        );
+        */
+       </script> 
+
+    {% endblock %}
+
+    {% block highlight_ibnr %} class="active" {% endblock %}
+    {% block highlight_ibnr2 %} class="active" {% endblock %}
+    {% block CET_treeview %}
+    active
+    {% endblock %}
+    {% block CET_menu_open %}
+    menu-open
+    {% endblock %}
+    {% block CET_menu_style %}
+    style="display: block;"
+    {% endblock %}
+    {% block ibnr_menu_open %}
+    menu-open
+    {% endblock %}
+    {% block ibnr_menu_style %}
+    style="display: block;"
+    {% endblock %}

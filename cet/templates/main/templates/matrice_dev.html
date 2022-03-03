@@ -1,0 +1,380 @@
+{% extends 'main/templates/index.html' %}
+{% load static %}
+{% load humanize %}
+{% block meta %}
+<style>
+
+
+</style>
+<!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href=" {% static 'cet/table_template/vendor/animate/animate.css' %} " >
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href=" {% static 'cet/table_template/vendor/select2/select2.min.css' %} " >
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href=" {% static 'cet/table_template/vendor/perfect-scrollbar/perfect-scrollbar.css' %} " >
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href=" {% static 'cet/table_template/css/util.css' %} "  >
+	<link rel="stylesheet" type="text/css" href=" {% static 'cet/table_template/css/main.css' %} " >
+<!--===============================================================================================-->
+
+{% endblock %}
+
+{% block header %}
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        MATRICE DE DEVELOPPEMENT
+        <small></small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="/cet"><i class="fa fa-dashboard"></i> CET</a></li>
+        <li class="active">MATRICE DE DEVELOPPEMENT</li>
+    </ol>
+</section>
+
+{% endblock %}
+
+
+{% block content %}
+
+<form action="{% url 'cet:view_matrice_dev' %}" method="get">
+    <label for="type_donnee" >Type de donnée </label>
+    <SELECT  name="type_donnee" style="margin-bottom: 10px;" required id="liste_type_donnee">
+        <option value="sinistre" > Sinistre </option>
+        <option value="prime" >Prime</option>
+        <option value="sap" >SAP</option>
+    </SELECT>
+
+    <label for="branche" >Branche</label>
+    <SELECT name="branche" style="margin-bottom: 10px; display: inline;" required id="listebranches">
+        <option value="A"> FIRE </option>
+        <option value="B"> ENGINEERING </option>
+        <option value="C"> RC/ACCIDENT </option>
+        <option value="D"> AUTO</option>
+        <option value="E"> MARINE HULL </option>
+        <option value="F"> MARINE CARGO</option>
+        <option value="G"> ONSHORE OIL </option>
+        <option value="H"> OFFSHORE OIL</option>
+        <option value="I"> TOUT RISQUE INFORMATIQUE</option>
+        <option value="J"> AVIATION </option>
+        <option value="K"> INDIVIDUAL LIFE</option>
+        <option value="L"> ASSURANCE CREDIT</option>
+        <option value="M"> MEDICAL EXPENSES </option>
+        <option value="N"> RISKS AGRICOLES </option>
+        <option value="O"> PROPERTY </option>
+        <option value="P"> RC DECENNALE </option>
+        <option value="Q"> RISQUES SPECIAUX - VP - </option>
+        <option value="R"> PERTE DE PRODUITS</option>
+        <option value="S"> BANK GLOBAL</option>
+        <option value="T"> CATASTROPHE NATURELLE </option>
+        <option value="U"> WHOLE ACCOUNT MARINE</option>
+        <option value="V"> WHOLE ACCOUNT NON MARINE</option>
+        <option value="W"> WHOLE ACCOUNT </option>
+        <option value="X"> ASSISTANCE VOYAGE </option>
+        <option value="?"selected> TOUTES BRANCHES</option>
+    </SELECT>
+
+    <label for="zone" >Zone </label>
+    <SELECT  name="zone" style="margin-bottom: 10px;" required id="listezones">
+        <option value="1"> Algérie </option>
+        <option value="2">Afrique et monde Arabe</option>
+        <option value="3"> Amérique et asie </option>
+        <option value="4">Europe</option>
+        <option value="?">Toutes zones</option>
+    </SELECT>
+
+    <label for="portfolio" >Portfolio </label>
+    <SELECT  name="portfolio" style="margin-bottom: 10px;" required id="listeport">
+        <option value="1" > Traité </option>
+        <option value="2"   >Fac</option>
+        <option value="?" > Tous types </option>
+
+    </SELECT>
+    <br>
+    <label for="methode" >Methode</label>
+    <SELECT  name="methode" style="margin-bottom: 10px;" required id="listemethode">
+        <option value="cl" > Chainladder </option>
+        <!--<option value="mackcl">MackChainladder</option>-->
+
+    </SELECT>
+    <label for="periode" >Periode</label>
+    <SELECT  name="periode" style="margin-bottom: 10px;" required id="listeperiode">
+        <option value="2eme">2eme Semestre</option>
+        <option value="1er" > 1er Semestre </option>
+    </SELECT>
+    <button type="submit" class="btn btn-block btn-success btn-xs" style="width: 100;">Soumettre</button>
+</form>
+<div class="container" style="margin-top: 30px; width: 100%;">
+    <div class="row">
+        <div class="col-md-17">
+            <div class="nav-tabs-custom">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a href="#tab_1" data-toggle="tab">Matrice triangulaire</a></li>
+                    <li><a href="#tab_2" data-toggle="tab">Matrice complétée</a></li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane active" id="tab_1">
+                        <!-- TABLEAU LA TABLE TRIANGULAIRE -->
+                        {% if vide != '1'  %}
+                            <div class="container-table110" >
+                                <div class="wrap-table110">
+                                    <div class="table100 ver1 m-b-110 " style="padding-top: 0px; margin-bottom: 10px;">
+                                        
+                                        <div style="overflow-x:auto;">
+                                            <table class="table100-body" >
+                                                <thead>
+                                                    <!-- TEST-->
+                                                    <tr class="row100 head" >
+                                                        {% for x in annee_dev %}
+                                                            {% if x != 'IBNR'  %}
+                                                                <th style="padding-left:30px ; text-align: center;"> {{x}} </th>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for ligne in liste %}
+                                                    <tr class="row100 body"  >
+                                                        
+                                                        {% for x in ligne %}
+                                                            <td   style="padding-left:30px ; text-align: right; "> 
+                                                                {% if forloop.counter == 1  %}
+                                                                    {{x}}
+                                                                {% else %}
+                                                                    {{x|stringformat:'0.2f'|intcomma}}
+                                                                {% endif %}
+                                                            </td>
+                                                        {% endfor %}
+                                                    </tr>
+                                                    {% endfor %}
+                                                                                    
+                                                </tbody>
+                                                
+                                            </table>
+                                        </div>                                        
+                                    </div>
+                                    <div>
+                                        <form action="{% url 'cet:excel_matrice_ibnr' %}">
+                                            <input type="hidden" name="type_matrice" value="triangulaire">
+                                            <input type="hidden" name="type_donnee" id="hidden_type_donnee">
+                                            <input type="hidden" name="branche" id="hidden_branche">
+                                            <input type="hidden" name="zone" id="hidden_zone">
+                                            <input type="hidden" name="portfolio" id="hidden_port">
+                                            <input type="hidden" name="periode" id="hidden_periode">
+                                            <button type="submit" class="btn btn-block btn-success btn-xs" style="width: 100;">Excel</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            {% else %}
+                            <p>Pas de données.</p>
+                            {% endif %}
+                    </div><!-- /.tab-pane -->
+                    <div class="tab-pane" id="tab_2">
+                        <!-- Matrice complétée  CONTENT -->
+                        <div >
+                            {% if vide != '1'  %}
+                            <div class="container-table110" >
+                                <div class="wrap-table110">
+                                    <div class="table100 ver1 m-b-110 " style="padding-top: 0px; margin-bottom: 10px;">
+                                        <div style="overflow-x:auto;">
+                                            <table class="table100-body" >
+                                                <thead>
+                                                    <tr class="row100 head" >
+                                                        {% for x in annee_dev %}
+                                                            <th style="padding-left:30px ; text-align: center;"> {{x}} </th>
+                                                        {% endfor %}
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for ligne1 in matrice_remplie %}
+                                                    <tr class="row100 body"  >
+                                                        
+                                                        {% for x in ligne1 %}
+                                                            <td   style="padding-left:30px ; text-align: right; "> 
+                                                                {% if forloop.counter == 1  %}
+                                                                    {{x}}
+                                                                {% else %}
+                                                                    {{x|stringformat:'0.2f'|intcomma}}
+                                                                {% endif %}
+                                                            </td>
+                                                        {% endfor %}
+                                                    </tr>
+                                                    {% endfor %}
+                                                                                    
+                                                </tbody>
+                                                
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <form action="{% url 'cet:excel_matrice_ibnr' %}">
+                                            <input type="hidden" name="type_matrice" value="complete">
+                                            <input type="hidden" name="type_donnee" id="hidden_type_donnee2">
+                                            <input type="hidden" name="branche" id="hidden_branche2">
+                                            <input type="hidden" name="zone" id="hidden_zone2">
+                                            <input type="hidden" name="portfolio" id="hidden_port2">
+                                            <input type="hidden" name="periode" id="hidden_periode2">
+                                            <button type="submit" class="btn btn-block btn-success btn-xs" style="width: 100;">Excel</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            {% else %}
+                            <p>Pas de données.</p>
+                            {% endif %}
+                        </div>
+
+
+                    </div><!-- /.tab-pane -->
+                </div><!-- /.tab-content -->
+            </div><!-- nav-tabs-custom -->
+        </div><!-- ./col -->
+
+        <div class="col-sm-4">
+        </div>
+    </div>
+</div>
+
+<div class="container" style="margin-top: 30px; width: 100%;">
+    <div class="row">
+      <div class="col-md-17">
+        <div class="nav-tabs-custom"  >
+          <ul class="nav nav-tabs">
+            <li class="active"><a href="#tab_1" data-toggle="tab">Exportation EXCEL en bloc</a></li>
+            <!--<li><a href="#tab_2" data-toggle="tab">RETAKAFUL</a></li>-->
+            
+            <li class="pull-right"><a href="#" class="text-muted"><i class="fa fa-gear"></i></a></li>
+          </ul>
+          <div class="tab-content">
+            <div class="tab-pane active" id="tab_1">
+                <div>
+                    <form action="{% url 'cet:excel_bloc_matrice_ibnr' %}" method="get">
+                        <label for="type_donnee" >Type de donnée </label>
+                        <SELECT  name="type_donnee" style="margin-bottom: 10px;" required id="liste_type_donnee">
+                            <option value="sinistre" selected> Sinistre </option>
+                            <option value="prime" >Prime</option>
+                            <option value="sap" >SAP</option>
+                        </SELECT>
+
+                        <label for="zone" >Zone </label>
+                        <SELECT  name="zone" style="margin-bottom: 10px;" required id="listezones">
+                            <option value="1"> Algérie </option>
+                            <option value="2">Afrique et monde Arabe</option>
+                            <option value="3"> Amérique et asie </option>
+                            <option value="4">Europe</option>
+                            <option value="?" selected>Toutes zones</option>
+                        </SELECT>
+                    
+                        <label for="portfolio" >Portfolio </label>
+                        <SELECT  name="portfolio" style="margin-bottom: 10px;" required id="listeport">
+                            <option value="1" > Traité </option>
+                            <option value="2"   >Fac</option>
+                            <option value="?" selected> Tous types </option>
+                    
+                        </SELECT>
+
+                        <!--<label for="type_matrice" >Type matrice</label>
+                        <SELECT  name="type_matrice" style="margin-bottom: 10px;" required id="listemethode">
+                            <option value="triangulaire" selected > Triangulaire </option>
+                            <option value="complete">complétée</option>
+                    
+                        </SELECT>-->
+                        <label for="methode" >Methode</label>
+                        <SELECT  name="methode" style="margin-bottom: 10px;" required id="listemethode">
+                            <option value="cl" > Chainladder </option>
+                            <!--<option value="mackcl">MackChainladder</option>-->
+                        </SELECT>
+                        <label for="periode" >Periode</label>
+                            <SELECT  name="periode" style="margin-bottom: 10px;" required id="listeperiode">
+                                <option value="2eme">2eme Semestre</option>
+                                <option value="1er" > 1er Semestre </option>
+                            </SELECT>
+                        <button type="submit" class="btn btn-block btn-success btn-xs" style="width: 100;">Soumettre</button>
+                    </form>
+
+                </div>
+            </div><!-- /.tab-pane -->
+            <div class="tab-pane" id="tab_2">
+              
+            </div><!-- /.tab-pane -->
+          </div><!-- /.tab-content -->
+        </div><!-- nav-tabs-custom -->
+      </div><!-- ./col -->
+    </div>
+  </div>
+
+    <script type="text/javascript">
+        var data = JSON.parse("{{data|escapejs}}");
+        window.onload = function() {
+            for (var i =1 ; i <11 ; i++)
+            {
+                /*
+                *SETUP THE FIELDS
+                */
+                //BRANCHE
+                document.getElementById('listebranches').value=data['branche'];
+                //ZONE
+                document.getElementById('listezones').value=data['zone'];
+                //PORTFOLIO
+                document.getElementById('listeport').value=data['portfolio'];
+                //TYPE DE DONNEES
+                document.getElementById('liste_type_donnee').value=data['selected_type_donne'];
+                //TYPE DE DONNEES
+                document.getElementById('listemethode').value=data['methode'];
+                //SEMESTRE
+                document.getElementById('listeperiode').value=data['periode'];
+
+                /*
+                *SETUP THE HIDDEN FIELDS
+                */
+                //TYPE DE DONNEES
+                document.getElementById('hidden_type_donnee').value=data['selected_type_donne'];
+                //BRANCHE
+                document.getElementById('hidden_branche').value=data['branche'];
+                //ZONE
+                document.getElementById('hidden_zone').value=data['zone'];
+                //PORTFOLIO
+                document.getElementById('hidden_port').value=data['portfolio'];
+                //SEMESTRE
+                document.getElementById('hidden_periode').value=data['periode'];
+
+                /*
+                *SAME BUT FOR THE SECOND FORM OF HIDDEN FIELDS
+                */
+                //TYPE DE DONNEES
+                document.getElementById('hidden_type_donnee2').value=data['selected_type_donne'];
+                //BRANCHE
+                document.getElementById('hidden_branche2').value=data['branche'];
+                //ZONE
+                document.getElementById('hidden_zone2').value=data['zone'];
+                //PORTFOLIO
+                document.getElementById('hidden_port2').value=data['portfolio'];
+                //SEMESTRE
+                document.getElementById('hidden_periode2').value=data['periode'];
+            }
+            
+        };
+
+    </script> 
+
+    {% endblock %}
+
+    {% block highlight_ibnr %} class="active" {% endblock %}
+    {% block highlight_ibnr5 %} class="active" {% endblock %}
+    {% block CET_treeview %}
+    active
+    {% endblock %}
+    {% block CET_menu_open %}
+    menu-open
+    {% endblock %}
+    {% block CET_menu_style %}
+    style="display: block;"
+    {% endblock %}
+    {% block ibnr_menu_open %}
+menu-open
+{% endblock %}
+{% block ibnr_menu_style %}
+style="display: block;"
+{% endblock %}
